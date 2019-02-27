@@ -9,7 +9,7 @@
 | **kappabonus** | Python | [Сервис](services/kappabonus/) | [Чекер](checkers/kappabonus/) | [Сплойты](sploits/kappabonus/) | [Облако](etc/kappabonus/) |
 
 ## Лицензия
-«РАзрешено всем, кроме Арсиба» — [LICENSE.ABAGPL.txt](LICENSE.ABAGPL.txt)
+«РАзрешено всем, кроме Арсиба и Александра Ходорожко» — [LICENSE.ABAGPL.txt](LICENSE.ABAGPL.txt)
 
 Материалы разрешается использовать любыми способами всем, кроме АРСИБа. Обязательно публично указывать изначального автора, публиковать исходники, и сохранять ту же лицензию — всё как в GPLv3.
 
