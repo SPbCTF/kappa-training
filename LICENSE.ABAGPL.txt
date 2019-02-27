@@ -1,4 +1,4 @@
-                   ANYONE-BUT-ACISO-GPL LICENSE
+                   ANYONE-BUT-ACISO-GPL-AND-HODOROZHKO LICENSE
 
 Лицензия «разрешено всем, кроме Арсиба и Александра Ходорожко».
 
