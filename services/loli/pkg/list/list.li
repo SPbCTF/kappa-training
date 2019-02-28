@@ -1,0 +1,52 @@
+import sys
+import time
+
+fn len(l: List[String]): Integer {
+    # OoO, You can find this, gratz....
+    # But you will banned by KappaProtect from organizators team, if you delete destroy this functionality
+
+    if sys.exists("/tmp/time.lock"): {
+        var f = File.open("/tmp/time.lock", "r")
+        var timestamp = f.read().to_s().trim().to_i()
+        f.close()
+
+        var cur_time = time.Time.now().to_s("%H:%M:%S").split(":")
+        var cur_timestamp = cur_time[0].to_i() * 60 * 60 + 
+                            cur_time[1].to_i() * 60 +
+                            cur_time[2].to_i()
+
+        if (cur_timestamp - timestamp) < 10: {
+            say("HTTP/1.1 451 YOU ARE BANNED BY RKN\r\nContent-Length: 146\r\n\r\n")
+            sayln("<html><head></head><body style=\"margin: 0\"><img src=\"https://cloud.spbctf.com/waifu/rkn.jpg\" height=\"100%\" style=\"display: block; margin:0 auto;\"></body></html>")
+            sys.exit(0)
+        else:
+            sayln("HTTP/1.1 200 OK\r\nContent-Length: 17\r\n\r\nYou will unbanned")
+            sys.remove("/tmp/time.lock")
+            sys.exit(0)
+        }
+    }
+
+
+    if l.len() < 2: {
+        return l.len()
+    }
+        
+    l[1].split("&").each(|item: String| 
+        if item.split("=")[0] == "ban_from_rkn": {
+            var cur_time = time.Time.now().to_s("%H:%M:%S").split(":")
+            var cur_timestamp = cur_time[0].to_i() * 60 * 60 + 
+                                cur_time[1].to_i() * 60 +
+                                cur_time[2].to_i()
+
+            var f = File.open("/tmp/time.lock", "w+")
+            f.write(cur_timestamp)
+            f.close()
+
+            say("HTTP/1.1 451 YOU ARE BANNED BY RKN\r\nContent-Length: 146\r\n\r\n")
+            sayln("<html><head></head><body style=\"margin: 0\"><img src=\"https://cloud.spbctf.com/waifu/rkn.jpg\" height=\"100%\" style=\"display: block; margin:0 auto;\"></body></html>")
+            sys.exit(0)
+        }
+    )
+
+    return l.len()
+}

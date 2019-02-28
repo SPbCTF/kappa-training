@@ -1,0 +1,186 @@
+import sys
+import (error, find) utils
+import (render_template) renderer
+
+var WORKDIR = "/root/"
+
+fn main(args: Hash[String, String]) {
+    var files: List[String] = []
+
+    if sys.exists(WORKDIR ++ "users/user_list"):{
+        var f = File.open(WORKDIR ++ "users/user_list", "r")
+        f.each_line(|line: ByteString|
+            var clear_line = line.to_s().trim()
+            files.push(clear_line)
+        )
+        f.close()
+    }
+    
+    var quizes: String = ""
+
+    files.each(|item: String| 
+        if item != "": {
+            var id = item.split("$")[0]
+            var count = item.split("$")[1].to_i()
+            quizes = quizes ++ "<tr><th scope=\"row\" class=\"align-middle\">{0}</th>".format(id)
+            quizes = quizes ++ "<td class=\"align-middle\">{0}</td>".format(count)
+            quizes = quizes ++ "<td><button class=\"btn btn-primary\" onclick=\"window.location=\'/quiz?name={0}\';\"> Ashente!</button></td>\n".format(id)
+        }
+    )
+
+    sayln(render_template("main.html", [
+        "quizes" => quizes,
+    ]))
+    sys.exit(0)
+}
+
+fn quiz(args: Hash[String, String]) {
+    var name = args["name"].replace("/", "")
+
+    if !sys.is_file(WORKDIR ++ name): {
+        error(400, "Quiz does not exist")
+    }
+
+    var ids: List[String] = []
+    var f = File.open(WORKDIR ++ name, "r")
+    var count = f.read_line().to_s().trim().to_i()
+    for i in 0...count: {
+        ids.push(f.read_line().to_s().trim())
+    }
+    f.close()
+
+    var images: String = ""
+    var i = 1
+    ids.each(|id: String| 
+        images = images ++ "<div class=\"col-3 my-2 view overlay\">"
+        images = images ++ "<div class=\"row\">"
+        images = images ++ "<h3 class=\"text-info mx-2\">{0})</h3>".format(i)
+        images = images ++ "<img src=\"https://cloud.spbctf.com/waifu/waifu_{0}.png\" class=\"\">".format(id)
+        images = images ++ "</div></div>\n"
+        i += 1
+    )
+
+    sayln(render_template("quiz.html", [
+        "name" => name,
+        "images" => images,
+    ]))
+
+    sys.exit(0)
+}
+
+fn postquiz(args: Hash[String, String]) {
+    var name = args["name"]
+    var user_answer = args["answer"]
+    var order: List[Integer] = []
+    if args.has_key("order"): {
+        order = args["order"].split(",").map(|item: String| item.to_i())
+    }
+
+    if !sys.is_file(WORKDIR ++ name): {
+        error(400, "Quiz does not exist")
+    }
+
+    var ids: List[String] = []
+    var f = File.open(WORKDIR ++ name, "r")
+    var count = f.read_line().to_s().trim().to_i()
+    for i in 0...count: {
+        ids.push(f.read_line().to_s().trim())
+    }
+    var answer = f.read_line().to_s().trim()
+    var flag = f.read_line().to_s().trim()
+    f.close()
+
+    if order.len() != 0 && order.len() != ids.len(): {
+        error(406, "Your order length must be equal of pictures count")
+    elif user_answer.len() != answer.len():
+        error(406, "Your answer length must be equal of pictures count")
+    }
+
+    if order.len() > 0: {
+        var new_answer = ""
+        var new_ids: List[String] = []
+
+        order.each(|N: Integer| 
+            new_ids.push(ids[N])
+            new_answer = new_answer ++ answer.char_at(N)
+        )
+
+        ids = new_ids
+        answer = new_answer.replace("'", "")
+    }
+
+    var verdict = true
+    for i in 0...answer.len(): {
+        if user_answer.char_at(i) == 'y' && answer.char_at(i) == 'n': {
+            verdict = false
+        }
+        if user_answer.char_at(i) == 'n' && answer.char_at(i) == 'y': {
+            verdict = false
+        }
+    }
+
+    if verdict: {
+        sayln("HTTP/1.1 200 OK\r\nContent-Length: 32\r\n\r\n{0}".format(flag))
+    else:
+        sayln("HTTP/1.1 403 Invalid answer\r\n")
+    }
+
+    sys.exit(0)
+}
+
+fn createquiz(args: Hash[String, String]) {
+    var name = args["name"].replace("/", "")
+    var ids = args["ids"].replace("%2C", ",").replace("%2c", ",").split(",")
+    var count = ids.len()
+    var answer = args["answer"]
+    var flag = args["flag"].replace("%3D", "=").replace("%3d", "=")
+
+    if count < 5: {
+        error(400, "Length of quiz must be at least 5 pictures")
+    elif count > 30:
+        error(400, "Length of quiz should be not exceed 30 pictures")
+    elif answer.len() != count:
+        error(400, "Count of pictures and answers must be equal")
+    elif answer.replace("y", "").replace("n", "").len() != 0:
+        error(400, "Answer section must contain only y and n letters")
+    elif flag.len() != 32:
+        error(406, "Flag length must be 32")
+    elif sys.exists(WORKDIR ++ name):
+        error(409, "Quiz already exists")
+    elif name.len() < 12:
+        error(400, "Quiz name is too short")
+    }
+
+    var f = File.open(WORKDIR ++ name, "w+")          
+    f.write("{0}\n".format(count))
+    ids.each(|id: String| f.write("{0}\n".format(id)))
+    f.write("{0}\n".format(answer))
+    f.write("{0}\n".format(flag))
+    f.close()
+
+    var quizes: List[String] = []
+
+    if sys.exists(WORKDIR ++ "users/user_list"): {
+        var ff = File.open(WORKDIR ++ "users/user_list", "r")
+        ff.each_line(|line: ByteString|
+            var clear_line = line.to_s().trim()
+            quizes.push(clear_line)
+        )
+        ff.close()
+    }
+
+    quizes.unshift("{0}${1}".format(name, count))
+
+    while quizes.len() > 19: {
+        quizes.shift()
+    }
+
+    var fff = File.open(WORKDIR ++ "users/user_list", "w+")
+    quizes.each(|line: String|
+        fff.print(line)
+    )
+    fff.close()
+
+    sayln("HTTP/1.1 201 Created\r\nContent-Length: 4\r\n\r\nNya!)")
+    sys.exit(0)
+}

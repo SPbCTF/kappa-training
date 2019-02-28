@@ -1,0 +1,9 @@
+fn render_template(template: String, args: *Hash[String, String] = []): String {
+    var header = "HTTP/1.1 200 OK\r\nContent-Length: {0}\r\n\r\n"
+    var temp = File.open("/root/templates/" ++ template, "r")
+    var body = temp.read(-1).to_s()
+    temp.close()
+
+    args.each_pair(|ram: String, rem: String| body = body.replace("{{" ++ ram ++ "}}", rem))
+    return header.format(body.len()) ++ body
+}

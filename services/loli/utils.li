@@ -1,0 +1,40 @@
+import sys
+import (len) list
+
+fn parse_route(url: String): String {
+    return url.split("?")[0].slice(1)
+}
+
+fn parse_args(url: String): Hash[String, String] {
+    var result: Hash[String, String] = []
+
+    var args_line = url.split("?")
+    var kissshot: String = ""
+    if len(args_line) > 1: {
+        kissshot = args_line[1]
+    else:
+        return []
+    }
+    var args_pairs = kissshot.split("&")
+    
+    args_pairs.each(|arg: String| 
+        var arg_pair = arg.split("=")
+        result[arg_pair[0]] = arg_pair[1]
+    )
+
+    return result
+}
+
+fn error(code: Integer, msg: String) {
+    sayln("HTTP/1.1 {0} {1}\r\n".format(code, msg))
+    sys.exit(0)
+}
+
+fn find(arr: List[String], key: String): Integer {
+    for i in 0...arr.len(): {
+        if arr[i] == key: {
+            return i
+        }
+    }
+    return -1
+}
