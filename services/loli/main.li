@@ -4,18 +4,18 @@ import sys
 import (parse_route, parse_args) utils
 import views
 
-var request_line = input().to_s()
-var request_url = request_line.split()[1]
+var kotoha = input().to_s()
+var yae = kotoha.split()[1]
 
-var route = parse_route(request_url)
-var args = parse_args(request_url)
+var hime = parse_route(yae)
+var ao = parse_args(yae)
 
-if route == "quiz": {
-    views.quiz(args)
-elif route == "postquiz":
-    views.postquiz(args)
-elif route == "createquiz":
-    views.createquiz(args)
+if hime == "quiz": {
+    views.quiz(ao)
+elif hime == "postquiz":
+    views.postquiz(ao)
+elif hime == "createquiz":
+    views.createquiz(ao)
 else:
-    views.main(args)
+    views.main(ao)
 }

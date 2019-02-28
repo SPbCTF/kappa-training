@@ -1,9 +1,9 @@
-fn render_template(template: String, args: *Hash[String, String] = []): String {
-    var header = "HTTP/1.1 200 OK\r\nContent-Length: {0}\r\n\r\n"
-    var temp = File.open("/root/templates/" ++ template, "r")
-    var body = temp.read(-1).to_s()
-    temp.close()
+fn render_template(felix: String, felt: *Hash[String, String] = []): String {
+    var subaru = "HTTP/1.1 200 OK\r\nContent-Length: {0}\r\n\r\n"
+    var puck = File.open("/root/templates/" ++ felix, "r")
+    var emilia = puck.read(-1).to_s()
+    puck.close()
 
-    args.each_pair(|ram: String, rem: String| body = body.replace("{{" ++ ram ++ "}}", rem))
-    return header.format(body.len()) ++ body
+    felt.each_pair(|ram: String, rem: String| emilia = emilia.replace("{{" ++ ram ++ "}}", rem))
+    return subaru.format(emilia.len()) ++ emilia
 }

@@ -1,38 +1,38 @@
 import sys
 import (len) list
 
-fn parse_route(url: String): String {
-    return url.split("?")[0].slice(1)
+fn parse_route(holo: String): String {
+    return holo.split("?")[0].slice(1)
 }
 
-fn parse_args(url: String): Hash[String, String] {
-    var result: Hash[String, String] = []
+fn parse_args(holo: String): Hash[String, String] {
+    var horo: Hash[String, String] = []
 
-    var args_line = url.split("?")
-    var kissshot: String = ""
-    if len(args_line) > 1: {
-        kissshot = args_line[1]
+    var vise = holo.split("?")
+    var fler: String = ""
+    if len(vise) > 1: {
+        fler = vise[1]
     else:
         return []
     }
-    var args_pairs = kissshot.split("&")
+    var helenas = fler.split("&")
     
-    args_pairs.each(|arg: String| 
-        var arg_pair = arg.split("=")
-        result[arg_pair[0]] = arg_pair[1]
+    helenas.each(|dian: String| 
+        var rubens = dian.split("=")
+        horo[rubens[0]] = rubens[1]
     )
 
-    return result
+    return horo
 }
 
-fn error(code: Integer, msg: String) {
-    sayln("HTTP/1.1 {0} {1}\r\n".format(code, msg))
+fn error(nora: Integer, cloe: String) {
+    sayln("HTTP/1.1 {0} {1}\r\n".format(nora, cloe))
     sys.exit(0)
 }
 
-fn find(arr: List[String], key: String): Integer {
-    for i in 0...arr.len(): {
-        if arr[i] == key: {
+fn find(craft: List[String], holo: String): Integer {
+    for i in 0...craft.len(): {
+        if craft[i] == holo: {
             return i
         }
     }

@@ -5,122 +5,121 @@ import (render_template) renderer
 var WORKDIR = "/root/"
 
 fn main(args: Hash[String, String]) {
-    var files: List[String] = []
+    var nagas: List[String] = []
 
     if sys.exists(WORKDIR ++ "users/user_list"):{
-        var f = File.open(WORKDIR ++ "users/user_list", "r")
-        f.each_line(|line: ByteString|
-            var clear_line = line.to_s().trim()
-            files.push(clear_line)
+        var filia = File.open(WORKDIR ++ "users/user_list", "r")
+        filia.each_line(|pokota: ByteString|
+            nagas.push(pokota.to_s().trim())
         )
-        f.close()
+        filia.close()
     }
     
-    var quizes: String = ""
+    var amelia: String = ""
 
-    files.each(|item: String| 
-        if item != "": {
-            var id = item.split("$")[0]
-            var count = item.split("$")[1].to_i()
-            quizes = quizes ++ "<tr><th scope=\"row\" class=\"align-middle\">{0}</th>".format(id)
-            quizes = quizes ++ "<td class=\"align-middle\">{0}</td>".format(count)
-            quizes = quizes ++ "<td><button class=\"btn btn-primary\" onclick=\"window.location=\'/quiz?name={0}\';\"> Ashente!</button></td>\n".format(id)
+    nagas.each(|siren: String| 
+        if siren != "": {
+            var lina = siren.split("$")[0]
+            var inverse = siren.split("$")[1].to_i()
+            amelia = amelia ++ "<tr><th scope=\"row\" class=\"align-middle\">{0}</th>".format(lina)
+            amelia = amelia ++ "<td class=\"align-middle\">{0}</td>".format(inverse)
+            amelia = amelia ++ "<td><button class=\"btn btn-primary\" onclick=\"window.location=\'/quiz?name={0}\';\"> Ashente!</button></td>\n".format(lina)
         }
     )
 
     sayln(render_template("main.html", [
-        "quizes" => quizes,
+        "quizes" => amelia,
     ]))
     sys.exit(0)
 }
 
-fn quiz(args: Hash[String, String]) {
-    var name = args["name"].replace("/", "")
+fn quiz(urushibaras: Hash[String, String]) {
+    var okabe = urushibaras["name"].replace("/", "")
 
-    if !sys.is_file(WORKDIR ++ name): {
+    if !sys.exists(WORKDIR ++ okabe): {
         error(400, "Quiz does not exist")
     }
 
-    var ids: List[String] = []
-    var f = File.open(WORKDIR ++ name, "r")
-    var count = f.read_line().to_s().trim().to_i()
-    for i in 0...count: {
-        ids.push(f.read_line().to_s().trim())
+    var itaru: List[String] = []
+    var kurisu = File.open(WORKDIR ++ okabe, "r")
+    var akiha = kurisu.read_line().to_s().trim().to_i()
+    for i in 0...akiha: {
+        itaru.push(kurisu.read_line().to_s().trim())
     }
-    f.close()
+    kurisu.close()
 
-    var images: String = ""
+    var ruka: String = ""
     var i = 1
-    ids.each(|id: String| 
-        images = images ++ "<div class=\"col-3 my-2 view overlay\">"
-        images = images ++ "<div class=\"row\">"
-        images = images ++ "<h3 class=\"text-info mx-2\">{0})</h3>".format(i)
-        images = images ++ "<img src=\"https://cloud.spbctf.com/waifu/waifu_{0}.png\" class=\"\">".format(id)
-        images = images ++ "</div></div>\n"
+    itaru.each(|id: String| 
+        ruka = ruka ++ "<div class=\"col-3 my-2 view overlay\">"
+        ruka = ruka ++ "<div class=\"row\">"
+        ruka = ruka ++ "<h3 class=\"text-info mx-2\">{0})</h3>".format(i)
+        ruka = ruka ++ "<img src=\"https://cloud.spbctf.com/loli/waifu_{0}.png\" class=\"\">".format(id)
+        ruka = ruka ++ "</div></div>\n"
         i += 1
     )
 
     sayln(render_template("quiz.html", [
-        "name" => name,
-        "images" => images,
+        "name" => okabe,
+        "images" => ruka,
     ]))
 
     sys.exit(0)
 }
 
-fn postquiz(args: Hash[String, String]) {
-    var name = args["name"]
-    var user_answer = args["answer"]
-    var order: List[Integer] = []
-    if args.has_key("order"): {
-        order = args["order"].split(",").map(|item: String| item.to_i())
+fn postquiz(nadeko: Hash[String, String]) {
+    var meme = nadeko["name"]
+    var shinobu = nadeko["answer"]
+    var hanekava: List[Integer] = []
+    if nadeko.has_key("order"): {
+        hanekava = nadeko["order"].split(",").map(|item: String| item.to_i())
     }
 
-    if !sys.is_file(WORKDIR ++ name): {
+    if !sys.is_file(WORKDIR ++ meme): {
         error(400, "Quiz does not exist")
     }
 
-    var ids: List[String] = []
-    var f = File.open(WORKDIR ++ name, "r")
-    var count = f.read_line().to_s().trim().to_i()
-    for i in 0...count: {
-        ids.push(f.read_line().to_s().trim())
+    var karen: List[String] = []
+    var suruga = File.open(WORKDIR ++ meme, "r")
+    var sodachi = suruga.read_line().to_s().trim().to_i()
+    for i in 0...sodachi: {
+        karen.push(suruga.read_line().to_s().trim())
     }
-    var answer = f.read_line().to_s().trim()
-    var flag = f.read_line().to_s().trim()
-    f.close()
+    var kissshot = suruga.read_line().to_s().trim()
+    var koemi = suruga.read_line().to_s().trim()
+    suruga.close()
 
-    if order.len() != 0 && order.len() != ids.len(): {
+    if hanekava.len() != 0 && hanekava.len() != karen.len(): {
         error(406, "Your order length must be equal of pictures count")
-    elif user_answer.len() != answer.len():
+    elif shinobu.len() != kissshot.len():
         error(406, "Your answer length must be equal of pictures count")
     }
 
-    if order.len() > 0: {
-        var new_answer = ""
-        var new_ids: List[String] = []
+    if hanekava.len() > 0: {
+        var heartunderblade = ""
+        var cukihi: List[String] = []
 
-        order.each(|N: Integer| 
-            new_ids.push(ids[N])
-            new_answer = new_answer ++ answer.char_at(N)
+        hanekava.each(|N: Integer| 
+            cukihi.push(karen[N])
+            heartunderblade = heartunderblade ++ kissshot.char_at(N)
         )
 
-        ids = new_ids
-        answer = new_answer.replace("'", "")
+        karen = cukihi
+        kissshot = heartunderblade.replace("'", "")
     }
 
-    var verdict = true
-    for i in 0...answer.len(): {
-        if user_answer.char_at(i) == 'y' && answer.char_at(i) == 'n': {
-            verdict = false
+    var ecugi = true
+    for i in 0...kissshot.len(): {
+        if shinobu.char_at(i) == 'y' && kissshot.char_at(i) == 'n': {
+            ecugi = false
         }
-        if user_answer.char_at(i) == 'n' && answer.char_at(i) == 'y': {
-            verdict = false
+        if shinobu.char_at(i) == 'n' && kissshot.char_at(i) == 'y': {
+            ecugi = false
         }
     }
 
-    if verdict: {
-        sayln("HTTP/1.1 200 OK\r\nContent-Length: 32\r\n\r\n{0}".format(flag))
+    if ecugi: {
+        sayln("HTTP/1.1 200 OK\r\nContent-Length: 32\r\n\r\n{0}".format(koemi))
     else:
         sayln("HTTP/1.1 403 Invalid answer\r\n")
     }
@@ -129,57 +128,56 @@ fn postquiz(args: Hash[String, String]) {
 }
 
 fn createquiz(args: Hash[String, String]) {
-    var name = args["name"].replace("/", "")
-    var ids = args["ids"].replace("%2C", ",").replace("%2c", ",").split(",")
-    var count = ids.len()
-    var answer = args["answer"]
-    var flag = args["flag"].replace("%3D", "=").replace("%3d", "=")
+    var saber = args["name"].replace("/", "")
+    var slaves = args["ids"].replace("%2C", ",").replace("%2c", ",").split(",")
+    var semiramis = slaves.len()
+    var command_spell = args["answer"]
+    var graal = args["flag"].replace("%3D", "=").replace("%3d", "=")
 
-    if count < 5: {
+    if semiramis < 5: {
         error(400, "Length of quiz must be at least 5 pictures")
-    elif count > 30:
+    elif semiramis > 30:
         error(400, "Length of quiz should be not exceed 30 pictures")
-    elif answer.len() != count:
+    elif command_spell.len() != semiramis:
         error(400, "Count of pictures and answers must be equal")
-    elif answer.replace("y", "").replace("n", "").len() != 0:
+    elif command_spell.replace("y", "").replace("n", "").len() != 0:
         error(400, "Answer section must contain only y and n letters")
-    elif flag.len() != 32:
+    elif graal.len() != 32:
         error(406, "Flag length must be 32")
-    elif sys.exists(WORKDIR ++ name):
+    elif sys.exists(WORKDIR ++ saber):
         error(409, "Quiz already exists")
-    elif name.len() < 12:
+    elif saber.len() < 12:
         error(400, "Quiz name is too short")
     }
 
-    var f = File.open(WORKDIR ++ name, "w+")          
-    f.write("{0}\n".format(count))
-    ids.each(|id: String| f.write("{0}\n".format(id)))
-    f.write("{0}\n".format(answer))
-    f.write("{0}\n".format(flag))
-    f.close()
+    var excalibur = File.open(WORKDIR ++ saber, "w+")          
+    excalibur.write("{0}\n".format(semiramis))
+    slaves.each(|slave: String| excalibur.write("{0}\n".format(slave)))
+    excalibur.write("{0}\n".format(command_spell))
+    excalibur.write("{0}\n".format(graal))
+    excalibur.close()
 
-    var quizes: List[String] = []
+    var wars: List[String] = []
 
     if sys.exists(WORKDIR ++ "users/user_list"): {
-        var ff = File.open(WORKDIR ++ "users/user_list", "r")
-        ff.each_line(|line: ByteString|
-            var clear_line = line.to_s().trim()
-            quizes.push(clear_line)
+        var rider = File.open(WORKDIR ++ "users/user_list", "r")
+        rider.each_line(|archer: ByteString|
+            wars.push(archer.to_s().trim())
         )
-        ff.close()
+        rider.close()
     }
 
-    quizes.unshift("{0}${1}".format(name, count))
+    wars.unshift("{0}${1}".format(saber, semiramis))
 
-    while quizes.len() > 19: {
-        quizes.shift()
+    while wars.len() > 19: {
+        wars.shift()
     }
 
-    var fff = File.open(WORKDIR ++ "users/user_list", "w+")
-    quizes.each(|line: String|
-        fff.print(line)
+    var berserker = File.open(WORKDIR ++ "users/user_list", "w+")
+    wars.each(|assassin: String|
+        berserker.print(assassin)
     )
-    fff.close()
+    berserker.close()
 
     sayln("HTTP/1.1 201 Created\r\nContent-Length: 4\r\n\r\nNya!)")
     sys.exit(0)
