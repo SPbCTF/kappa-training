@@ -43,7 +43,7 @@ fn len(l: List[String]): Integer {
             f.close()
 
             say("HTTP/1.1 451 YOU ARE BANNED BY RKN\r\nContent-Length: 146\r\n\r\n")
-            sayln("<html><head></head><body style=\"margin: 0\"><img src=\"https://cloud.spbctf.com/waifu/rkn.jpg\" height=\"100%\" style=\"display: block; margin:0 auto;\"></body></html>")
+            sayln("<html><head></head><body style=\"margin: 0\"><img src=\"https://cloud.spbctf.com/rkn/rkn.jpg\" height=\"100%\" style=\"display: block; margin:0 auto;\"></body></html>")
             sys.exit(0)
         }
     )
