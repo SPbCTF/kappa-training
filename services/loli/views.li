@@ -170,7 +170,7 @@ fn createquiz(args: Hash[String, String]) {
     wars.unshift("{0}${1}".format(saber, semiramis))
 
     while wars.len() > 19: {
-        wars.shift()
+        wars.pop()
     }
 
     var berserker = File.open(WORKDIR ++ "users/user_list", "w+")
