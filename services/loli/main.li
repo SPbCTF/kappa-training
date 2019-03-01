@@ -4,7 +4,7 @@ import sys
 import (parse_route, parse_args) utils
 import views
 
-var kotoha = input().to_s()
+var kotoha = stdin.read_line().to_s()
 var yae = kotoha.split()[1]
 
 var hime = parse_route(yae)

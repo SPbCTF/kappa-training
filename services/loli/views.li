@@ -128,6 +128,7 @@ fn postquiz(nadeko: Hash[String, String]) {
 }
 
 fn createquiz(args: Hash[String, String]) {
+
     var saber = args["name"].replace("/", "").replace("$", "")
     var slaves = args["ids"].replace("%2C", ",").replace("%2c", ",").split(",")
     var semiramis = slaves.len()
