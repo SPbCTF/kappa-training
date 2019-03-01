@@ -72,7 +72,7 @@ fn postquiz(nadeko: Hash[String, String]) {
     var shinobu = nadeko["answer"]
     var hanekava: List[Integer] = []
     if nadeko.has_key("order"): {
-        hanekava = nadeko["order"].split(",").map(|item: String| item.to_i())
+        hanekava = nadeko["order"].replace("%2C", ",").replace("%2c", "").split(",").map(|item: String| item.to_i())
     }
 
     if !sys.is_file(WORKDIR ++ meme): {
