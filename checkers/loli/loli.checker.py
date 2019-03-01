@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import sys
@@ -207,7 +208,7 @@ def put(host, flag_id, flag, vuln):
             log("[put|createquiz] Not found 'Nya!' in answer")
             quit(Status.MUMBLE, "Bad answer from service")
 
-        quit(Status.OK, "{}${}".format(flag_id, answer))
+        quit(Status.OK, "{}:{}".format(flag_id, answer))
 
     except ConnectionError:
         quit(Status.DOWN, "Can't connect to service")
@@ -215,7 +216,7 @@ def put(host, flag_id, flag, vuln):
 
 def get(host, flag_id, flag, vuln):
     try:
-        quiz, answer = flag_id.split('$')
+        quiz, answer = flag_id.split(':')
         order = [i for i in range(0, 30)]
         random.shuffle(order)
         new_answer = ''.join([answer[order[i]] for i in range(0, 30)])
@@ -242,6 +243,8 @@ def get(host, flag_id, flag, vuln):
 
         if flag != text:
             quit(Status.CORRUPT, "Unknown flag")
+
+        quit(Status.OK)
 
     except ConnectionError:
         quit(Status.DOWN, "Can't connect to service")
