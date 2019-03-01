@@ -243,16 +243,22 @@ def get(host, flag_id, flag, vuln):
         sock = remote(host, PORT, level=60)
         
         sock.recvuntil('\n\n')
+        try:
+            sock.send('4'+'\n')
+            sock.recvuntil('\n')
+            sock.send(token+'\n')
+            resp = sock.recvuntil('\n').decode("utf-8")
+        except EOFError as e:
+            quit(Status.CORRUPT, 'Can\'t authorize')
 
-        sock.send('4'+'\n')
-        sock.recvuntil('\n')
-        sock.send(token+'\n')
+        if 'token not found' in resp:
+            quit(Status.CORRUPT, 'Can\'t authorize')
         sock.recvuntil('\n\n')
 
         sock.send('5'+'\n')
         my_items = sock.recvuntil('\n\n').decode("utf-8")
         if not flag.replace(' ', '_') in my_items:
-            quit(Status.CORRUPT, 'Can\t get flag')
+            quit(Status.CORRUPT, 'Can\'t get flag')
 
         quit(Status.OK)
     except PwnlibException as e:
