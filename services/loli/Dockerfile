@@ -9,4 +9,4 @@ COPY . .
 RUN cp xinetd.conf /etc/xinetd.d/loli
 RUN service xinetd restart
 
-CMD ["xinetd", "-d"]
+CMD script -c "xinetd -d"
