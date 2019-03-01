@@ -179,11 +179,72 @@ def check(host):
 
 
 def put(host, flag_id, flag, vuln):
-    raise NotImplementedError()
+    try:
+        ids = ','.join([random_string() for _ in range(30)])
+        answer = random_string(30, 'yn')
+
+        resp = requests.get("http://{}:4242/createquiz".format(host), params={
+            "name" : flag_id,
+            "ids" : ids,
+            "answer" : answer,
+            "flag": flag,
+        })
+
+        text = resp.text
+        code = resp.status_code // 100
+
+        if code == 4:
+            log("[put|createquiz] return {} code to params:\n\tname: {}\n\tids: \
+                {}\n\tanswer: {}\n\tflag: {}\n".format(resp.status_code, flag_id, ids, answer, flag))
+            quit(Status.MUMBLE, "Get {} code from createquiz".format(resp.status_code))
+        
+        if code == 5:
+            log("[put|createquiz] return {} code to params:\n\tname: {}\n\tids: \
+                {}\n\tanswer: {}\n\tflag: {}\n".format(resp.status_code, flag_id, ids, answer, flag))
+            quit(Status.DOWN, "Get {} code from createquiz".format(resp.status_code))
+
+        if text != 'Nya!':
+            log("[put|createquiz] Not found 'Nya!' in answer")
+            quit(Status.MUMBLE, "Bad answer from service")
+
+        quit(Status.OK, "{}${}".format(flag_id, answer))
+
+    except ConnectionError:
+        quit(Status.DOWN, "Can't connect to service")
 
 
 def get(host, flag_id, flag, vuln):
-    raise NotImplementedError()
+    try:
+        quiz, answer = flag_id.split('$')
+        order = [i for i in range(0, 30)]
+        random.shuffle(order)
+        new_answer = ''.join([answer[order[i]] for i in range(0, 30)])
+        order = ','.join([str(i) for i in order])
+
+        resp = requests.get("http://{}:4242/postquiz".format(host), params={
+            "name" : quiz,
+            "answer" : new_answer,
+            "order": order,
+        })
+
+        text = resp.text
+        code = resp.status_code // 100
+
+        if code == 4:
+            log("[get|postquiz] return {} code to params:\n\tname: {}\n\torder: \
+                {}\n\tanswer: {}\n".format(resp.status_code, flag_id, order, new_answer))
+            quit(Status.MUMBLE, "Get {} code from postquiz".format(resp.status_code))
+        
+        if code == 5:
+            log("[get|postquiz] return {} code to params:\n\tname: {}\n\torder: \
+                {}\n\tanswer: {}\n".format(resp.status_code, flag_id, order, new_answer))
+            quit(Status.DOWN, "Get {} code from postquiz".format(resp.status_code))
+
+        if flag != text:
+            quit(Status.CORRUPT, "Unknown flag")
+
+    except ConnectionError:
+        quit(Status.DOWN, "Can't connect to service")
 
 
 def main():
