@@ -64,6 +64,10 @@ def check(host):
         resp = requests.get("http://{}:4242/main".format(host))
         text = resp.text
 
+        if resp.status_code == 451:
+            log("RKN BAN, Yahoo")
+            quit(Status.MUMBLE, "RKN banned you")
+
         if "KappaProtect" not in text:
             log("Not found \"KappaProtect\"")
             quit(Status.MUMBLE, "Bad main page")
@@ -79,6 +83,11 @@ def check(host):
             "answer" : answer,
             "flag" : flag,
         })
+
+        if resp.status_code == 451:
+            log("RKN BAN, Yahoo")
+            quit(Status.MUMBLE, "RKN banned you")
+
         text = resp.text
         code = resp.status_code // 100
 
@@ -97,6 +106,11 @@ def check(host):
             quit(Status.MUMBLE, "Bad answer from service")
 
         resp = requests.get("http://{}:4242/main".format(host))
+
+        if resp.status_code == 451:
+            log("RKN BAN, Yahoo")
+            quit(Status.MUMBLE, "RKN banned you")
+
         text = resp.text
 
         if quiz not in text:
@@ -112,6 +126,10 @@ def check(host):
         })
         text = resp.text
         code = resp.status_code // 100
+
+        if resp.status_code == 451:
+            log("RKN BAN, Yahoo")
+            quit(Status.MUMBLE, "RKN banned you")
 
         if code == 4:
             log("[quiz] return {} code to params:\n\tname: {}\n\tids: \
@@ -135,6 +153,10 @@ def check(host):
         })
         text = resp.text
         code = resp.status_code // 100
+
+        if resp.status_code == 451:
+            log("RKN BAN, Yahoo")
+            quit(Status.MUMBLE, "RKN banned you")
 
         if code == 4:
             log("[postquiz] return {} code to params:\n\tname: {}\n\tids: \
@@ -162,6 +184,10 @@ def check(host):
         })
         text = resp.text
         code = resp.status_code // 100
+
+        if resp.status_code == 451:
+            log("RKN BAN, Yahoo")
+            quit(Status.MUMBLE, "RKN banned you")
 
         if code == 4:
             log("[postquiz] return {} code to params:\n\tname: {}\n\tids: \
@@ -193,6 +219,10 @@ def put(host, flag_id, flag, vuln):
 
         text = resp.text
         code = resp.status_code // 100
+
+        if resp.status_code == 451:
+            log("RKN BAN, Yahoo")
+            quit(Status.MUMBLE, "RKN banned you")
 
         if code == 4:
             log("[put|createquiz] return {} code to params:\n\tname: {}\n\tids: \
@@ -227,6 +257,10 @@ def get(host, flag_id, flag, vuln):
             "answer" : new_answer,
             "order": order,
         })
+
+        if resp.status_code == 451:
+            log("RKN BAN, Yahoo")
+            quit(Status.MUMBLE, "RKN banned you")
 
         text = resp.text
         code = resp.status_code // 100
