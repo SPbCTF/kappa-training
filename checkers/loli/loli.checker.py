@@ -282,8 +282,9 @@ def get(host, flag_id, flag, vuln):
 
         resp = requests.get("http://{}:4242/postquiz".format(host), params={
             "name" : quiz,
-            "answer" : new_answer,
-            "order": order,
+            "answer" : answer,
+#            "answer" : new_answer,
+#            "order": order,
         })
 
         if resp.status_code == 451:
