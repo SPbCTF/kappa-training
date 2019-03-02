@@ -1,5 +1,5 @@
 pycrypto
-mysql.connector
+mysql-connector-python
 passlib
 flask
 scrypt
