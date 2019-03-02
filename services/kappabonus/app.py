@@ -82,7 +82,7 @@ def register():
     
     return render_template(
         'signup.html', 
-        token=b64encode(session['challenge']),
+        token=b64encode(session['challenge']).decode("utf-8"),
         error=error
     )
 
@@ -134,40 +134,42 @@ def sell():
         return redirect("/login/")
 
     vip = row[0]
-
     error = None
 
     if request.method == 'POST':
-        flag = request.form.get("flag", "")
-        cost = float(request.form.get("cost", 0))
-        team = request.form.get("team", "")
+        cost = request.form.get("cost", "")
+        if vip or len(cost) < 4:
+            flag = request.form.get("flag", "")
+            team = request.form.get("team", "")
         
-        if flag and team in ["1", "2"] and cost > 0:
-            cursor = conn.cursor()
-            cursor.execute('select balance, posted_flags from users where username=%s', (username, ))
-            row = cursor.fetchone()
-            cursor.close()
-            balance, posted_flags = row
-            
-            if posted_flags >= 10:
-                del session["username"]
-                return redirect("/login/")
-            
-            team = "lcbc" if team == "2" else "kappa"
+            if flag and team in ["1", "2"] and cost > 0 and (vip or cost < 3):
+                cursor = conn.cursor()
+                cursor.execute('select balance, posted_flags from users where username=%s', (username, ))
+                row = cursor.fetchone()
+                cursor.close()
+                balance, posted_flags = row
+                
+                if posted_flags >= 10:
+                    del session["username"]
+                    return redirect("/login/")
+                
+                team = "lcbc" if team == "2" else "kappa"
 
-            conn.cursor().execute(
-                "update into users (balance, posted_flags) values (%i, %i) where username=%s",
-                (balance + int(price), posted + 1, username)
-            )
-            conn.cursor().execute(
-                # there is definitely no sql injection
-                "insert into {team} (flag, cost, username) values (%s, %i, %s)".format(team),
-                (flag, int(price), username)
-            )
+                conn.cursor().execute(
+                    "update into users (balance, posted_flags) values (%i, %i) where username=%s",
+                    (balance + int(price), posted + 1, username)
+                )
+                conn.cursor().execute(
+                    # there is definitely no sql injection
+                    "insert into {team} (flag, cost, username) values (%s, %i, %s)".format(team),
+                    (flag, int(price), username)
+                )
 
-            return redirect("/my/")
+                return redirect("/my/")
+            else:
+                error = "Fill form correctly"
         else:
-            error = "Fill form correctly"
+            error = "Won't buy such expensive flag!"
             
     return render_template(
         "sell.html",
