@@ -204,17 +204,29 @@ def my():
 
 @app.route('/buyflag/<int:flag_id>', methods=['GET'])
 def buy_flag(flag_id):
+    if username not in session:
+        return jsonify({"success": False, "reason": "login first"})
+    username = session["username"]
+
     cursor = conn.cursor()
-    username = session['username']
-    dbdata = cursor.execute("select balance from users where username=%s", (username))
-    balance = dbdata['balance']
-    dbdata = cursor.execute("select flag,price from kappa where id=%i", (flag_id))
-    price = dbdata['price']
-    flag = dbdata['flag']
-    if (balance - price) < 0:
-        return jsonify({'success': False, 'reason': "not enough money"})
-    cursor.execute("update into users(balance) values(%i) where username=%s", (balance - price, username))
-    return jsonify({'success': True, 'flag': flag})
+    cursor.execute("select balance from users where username=%s", (username, ))
+    row = cursor.fetchone()
+    balance = row[0]
+    cursor.close()
+
+    cursor = conn.cursor()
+    cursor.execute("select flag, price from kappa where id=%i", (flag_id, ))
+    row = cursor.fetchone()
+    if row is None:
+        return jsonify({"success": False, "reason": "no flag"})
+    flag, price = row
+
+    if price > balance:
+        return jsonify({"success": False, "reason": "no money - no flags"})
+
+    conn.cursor().execute("update into users (balance) values (%i) where username=%s", (balance - price, username))
+
+    return jsonify({"success": True, "flag": flag})
 
 
 if config["share_flags"] == "true":
