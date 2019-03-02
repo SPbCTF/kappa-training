@@ -1,11 +1,12 @@
 from flask import Flask,session,request, Response, redirect, jsonify, render_template
-from passlib.hash import scrypt
 from random import choices
 from string import ascii_uppercase, digits
 import mysql.connector
 from base64 import b64encode, b64decode
 from Crypto.PublicKey import RSA
 from re import sub
+from hashlib import sha512
+
 
 config = {}
 with open("config.ini", "r") as config_file:
@@ -69,7 +70,7 @@ def register():
                 
                 conn.cursor().execute(
                     "insert into user (username, password, vip) values (%s, %s, %s)",
-                    (username, scrypt.hash(password), is_vip)
+                    (username, sha512(password.encode()).hexdigest(), is_vip)
                 )
 
                 return redirect("/login/")
@@ -104,7 +105,7 @@ def login():
         row = cursor.fetchone()
         cursor.close()
         
-        if row is not None and scrypt.verify(password, row[0]):
+        if row is not None and sha512(password.encode()).hexdigest() == row[0]:
             if row[1] < 10:
                 session['username'] = username
                 return redirect("/my/")
