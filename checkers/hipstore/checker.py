@@ -15,7 +15,6 @@ import os
 
 VULNS = "1:1" # 1:2, 7:3, etc
 PORT = "7878"
-dirr = 'flags'
 
 fake = Faker()
 fake.add_provider(internet)
@@ -162,8 +161,6 @@ def check(host):
 
 def put(host, flag_id, flag, vuln):
     try:
-        if not os.path.exists(dirr):
-            os.makedirs(dirr)
         username = flag_id
         password = id_generator()
         token = ''
@@ -229,17 +226,18 @@ def put(host, flag_id, flag, vuln):
         sock.recvuntil('\n\n')
         sock.send('6'+'\n')
 
-        flag_file = open(dirr+'/'+username,'w')
-        print(token, file=flag_file)
-
-        quit(Status.OK)
+        quit(Status.OK, username, token, sep=':')
     except PwnlibException as e:
         quit(Status.DOWN, 'Failed to connect')
 
 
 def get(host, flag_id, flag, vuln):
     try:
-        token = open(dirr+"/"+flag_id, "r").readline().rstrip("\r\n")
+        try:
+            username, token = flag_id.split(":")
+        except ValueError:
+            quit(Status.CORRUPT, "I don't know token")
+        
         sock = remote(host, PORT, level=60)
         
         sock.recvuntil('\n\n')
