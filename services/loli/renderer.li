@@ -1,0 +1,9 @@
+fn render_template(felix: String, felt: *Hash[String, String] = []): String {
+    var subaru = "HTTP/1.1 200 OK\r\nContent-Length: {0}\r\n\r\n"
+    var puck = File.open("/root/templates/" ++ felix, "r")
+    var emilia = puck.read(-1).to_s()
+    puck.close()
+
+    felt.each_pair(|ram: String, rem: String| emilia = emilia.replace("{{" ++ ram ++ "}}", rem))
+    return subaru.format(emilia.len()) ++ emilia
+}

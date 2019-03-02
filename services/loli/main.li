@@ -1,0 +1,21 @@
+#!/usr/bin/env loli
+
+import sys
+import (parse_route, parse_args) utils
+import views
+
+var kotoha = stdin.read_line().to_s()
+var yae = kotoha.split()[1]
+
+var hime = parse_route(yae)
+var ao = parse_args(yae)
+
+if hime == "quiz": {
+    views.quiz(ao)
+elif hime == "postquiz":
+    views.postquiz(ao)
+elif hime == "createquiz":
+    views.createquiz(ao)
+else:
+    views.main(ao)
+}

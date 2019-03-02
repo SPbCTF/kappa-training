@@ -1,0 +1,43 @@
+global_lock = allocate_lock()
+_typecache_cffi_backend = weakref.WeakValueDictionary()
+
+def get_typecache(backend):
+    # returns _typecache_cffi_backend if backend is the _cffi_backend
+    # module, or type(backend).__typecache if backend is an instance of
+    # CTypesBackend (or some FakeBackend class during tests)
+    if isinstance(backend, types.ModuleType):
+        return _typecache_cffi_backend
+    with global_lock:
+        if not hasattr(type(backend), '__typecache'):
+            type(backend).__typecache = weakref.WeakValueDictionary()
+        return type(backend).__typecache
+
+def global_cache(srctype, ffi, funcname, *args, **kwds):
+    key = kwds.pop('key', (funcname, args))
+    assert not kwds
+    try:
+        return ffi._typecache[key]
+    except KeyError:
+        pass
+    try:
+        res = getattr(ffi._backend, funcname)(*args)
+    except NotImplementedError as e:
+        raise NotImplementedError("%s: %r: %s" % (funcname, srctype, e))
+    # note that setdefault() on WeakValueDictionary is not atomic
+    # and contains a rare bug (http://bugs.python.org/issue19542);
+    # we have to use a lock and do it ourselves
+    cache = ffi._typecache
+    with global_lock:
+        res1 = cache.get(key)
+        if res1 is None:
+            cache[key] = res
+            return res
+        else:
+            return res1
+
+def pointer_cache(ffi, BType):
+    return global_cache('?', ffi, 'new_pointer_type', BType)
+
+def attach_exception_info(e, name):
+    if e.args and type(e.args[0]) is str:
+        e.args = ('%s: %s' % (name, e.args[0]),) + e.args[1:]
