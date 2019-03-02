@@ -1,0 +1,214 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>Dashboard Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <nav class="navbar navbar-kappa fixed-top flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Kappa Бонус</a>
+      <a class="nav-link" href="#" style="color: white;">Ouroboros</a>
+      <!--<input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">-->
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link" href="#" style="color: white;">Выход</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">
+                  <span data-feather="home"></span>
+                  Флаги <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="file"></span>
+                  Отправка
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="shopping-cart"></span>
+                  Вывод денег
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="users"></span>
+                  Рефералы
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="bar-chart-2"></span>
+                  Статистика
+                </a>
+              </li>
+            </ul>
+
+          </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Флаги</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group mr-2">
+                <button class="btn btn-sm btn-outline-secondary">Поделиться</button>
+                <button class="btn btn-sm btn-outline-secondary">Экспорт</button>
+              </div>
+              <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                <span data-feather="calendar"></span>
+                Тренировка 17.02
+              </button>
+            </div>
+          </div>
+          
+          <div class="jumbotron" style="padding: 1rem;">
+            <p><b>Kappa Бонус</b> — твой способ поднять бабла. Нужно всего лишь три раза за раунд...</p>
+            <p>Регулярные выплаты от $30 на банковские счета РФ, карты Visa/МИР/ЛИТ,
+            Ыжкоины, Сбербанк Онлайн</p>
+            <p>За нашими плечами годы работы, десятки довольных клиентов и миллиарды
+            выплат</p>
+          </div>
+
+          <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+
+          <h2>История</h2>
+          <div class="table-responsive">
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Флаг</th>
+                  <th>Сервис</th>
+                  <th>Статус</th>
+                  <th>Прибыль</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>843642523</td>
+                  <td>OLNBXMZAN9E2K9AUDDFPF7ABE1B3FE3=</td>
+                  <td>cats</td>
+                  <td><b>ACCEPTED</b> fp: 1</td>
+                  <td>$0.04</td>
+                </tr>
+                <tr>
+                  <td>843642507</td>
+                  <td>2JNHKANB0REKNSLN5TOX22BB06E0AA4=</td>
+                  <td>cats</td>
+                  <td><b>DECLINED</b> owned by kappa</td>
+                  <td>-$0.001</td>
+                </tr>
+                <tr>
+                  <td>843642503</td>
+                  <td>TRDJDVIVYNOCSZRX87TMQE710BAEB2B=</td>
+                  <td>huine</td>
+                  <td><b>ACCEPTED</b> fp: 35</td>
+                  <td>$0.12</td>
+                </tr>
+                <tr>
+                  <td>843642448</td>
+                  <td>KTFRMBZGUUTOF8A08DN5Q4B85D3E966=</td>
+                  <td>versus</td>
+                  <td><b>ACCEPTED</b> fp: 17.235313151</td>
+                  <td>$0.06</td>
+                </tr>
+                <tr>
+                  <td>843642446</td>
+                  <td>JZWO8D9K4B26WYE4SIYWSBFC4FE71F7=</td>
+                  <td>cats</td>
+                  <td><b>DECLINED</b> too old</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>843642414</td>
+                  <td>MPI4PVNPEGKSJTDMRFVGY3EA9D4CF3E=</td>
+                  <td>music</td>
+                  <td><b>ACCEPTED</b> fp: 35</td>
+                  <td>$0.12</td>
+                </tr>
+                <tr>
+                  <td>1,006</td>
+                  <td>0AOI8K4QRPK4MKSK7T2U44A552D9992=</td>
+                  <td>elementum</td>
+                  <td>imperdiet</td>
+                  <td>Duis</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </main>
+      </div>
+    </div>
+    
+    <div style="z-index: 9999; background: #fff; position: fixed; left: 0; right: 0; bottom: 0; margin: 0; padding: 0.3rem; box-sizing: border-box; font-size: 0.6rem;">
+        <p style="margin: 0.1rem;">Copyright &copy; Общество с ограниченной ответственностью «Арбалеты Сибири» 2019</p>
+        <p style="margin: 0.1rem;">Перед участием ознакомьтесь с <a href="#">правилами участия в программа «Kappa Бонус»</a></p>
+    </div>
+ 
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+      feather.replace()
+    </script>
+
+    <!-- Graphs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script>
+      var ctx = document.getElementById("myChart");
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ["Round 139", "Round 140", "Round 141", "Round 142", "Round 143", "Round 144", "Round 145"],
+          datasets: [{
+            data: [7, 5, 14, 9, 11, 10, 16],
+            lineTension: 0,
+            backgroundColor: 'transparent',
+            borderColor: '#007bff',
+            borderWidth: 4,
+            pointBackgroundColor: '#007bff'
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: false
+              }
+            }]
+          },
+          legend: {
+            display: false,
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
