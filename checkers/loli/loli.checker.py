@@ -67,7 +67,7 @@ def check(host):
             log("RKN BAN, Yahoo")
             quit(Status.MUMBLE, "RKN banned you")
 
-        if resp.text == "You will unbanned":
+        if resp.text == "You will be unbanned":
             log("RKN unban")
             quit(Status.MUMBLE, "Request to unban")
 
@@ -91,7 +91,7 @@ def check(host):
             log("RKN BAN, Yahoo")
             quit(Status.MUMBLE, "RKN banned you")
 
-        if resp.text == "You will unbanned":
+        if resp.text == "You will be unbanned":
             log("RKN unban")
             quit(Status.MUMBLE, "Request to unban")
 
