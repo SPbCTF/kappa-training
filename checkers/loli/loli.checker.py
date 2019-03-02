@@ -68,6 +68,10 @@ def check(host):
             log("RKN BAN, Yahoo")
             quit(Status.MUMBLE, "RKN banned you")
 
+        if resp.text == "You will unbanned":
+            log("RKN unban")
+            quit(Status.MUMBLE, "Request to unban")
+
         if "KappaProtect" not in text:
             log("Not found \"KappaProtect\"")
             quit(Status.MUMBLE, "Bad main page")
@@ -87,6 +91,10 @@ def check(host):
         if resp.status_code == 451:
             log("RKN BAN, Yahoo")
             quit(Status.MUMBLE, "RKN banned you")
+
+        if resp.text == "You will unbanned":
+            log("RKN unban")
+            quit(Status.MUMBLE, "Request to unban")
 
         text = resp.text
         code = resp.status_code // 100
@@ -111,6 +119,10 @@ def check(host):
             log("RKN BAN, Yahoo")
             quit(Status.MUMBLE, "RKN banned you")
 
+        if resp.text == "You will unbanned":
+            log("RKN unban")
+            quit(Status.MUMBLE, "Request to unban")
+
         text = resp.text
 
         if quiz not in text:
@@ -130,6 +142,10 @@ def check(host):
         if resp.status_code == 451:
             log("RKN BAN, Yahoo")
             quit(Status.MUMBLE, "RKN banned you")
+
+        if resp.text == "You will unbanned":
+            log("RKN unban")
+            quit(Status.MUMBLE, "Request to unban")
 
         if code == 4:
             log("[quiz] return {} code to params:\n\tname: {}\n\tids: \
@@ -157,6 +173,10 @@ def check(host):
         if resp.status_code == 451:
             log("RKN BAN, Yahoo")
             quit(Status.MUMBLE, "RKN banned you")
+
+        if resp.text == "You will unbanned":
+            log("RKN unban")
+            quit(Status.MUMBLE, "Request to unban")
 
         if code == 4:
             log("[postquiz] return {} code to params:\n\tname: {}\n\tids: \
@@ -188,6 +208,10 @@ def check(host):
         if resp.status_code == 451:
             log("RKN BAN, Yahoo")
             quit(Status.MUMBLE, "RKN banned you")
+
+        if resp.text == "You will unbanned":
+            log("RKN unban")
+            quit(Status.MUMBLE, "Request to unban")
 
         if code == 4:
             log("[postquiz] return {} code to params:\n\tname: {}\n\tids: \
@@ -223,6 +247,10 @@ def put(host, flag_id, flag, vuln):
         if resp.status_code == 451:
             log("RKN BAN, Yahoo")
             quit(Status.MUMBLE, "RKN banned you")
+
+        if resp.text == "You will unbanned":
+            log("RKN unban")
+            quit(Status.MUMBLE, "Request to unban")
 
         if code == 4:
             log("[put|createquiz] return {} code to params:\n\tname: {}\n\tids: \
@@ -261,6 +289,10 @@ def get(host, flag_id, flag, vuln):
         if resp.status_code == 451:
             log("RKN BAN, Yahoo")
             quit(Status.MUMBLE, "RKN banned you")
+
+        if resp.text == "You will unbanned":
+            log("RKN unban")
+            quit(Status.MUMBLE, "Request to unban")
 
         text = resp.text
         code = resp.status_code // 100
