@@ -4,7 +4,7 @@ from random import choices
 from string import ascii_uppercase, digits
 import mysql.connector
 from base64 import b64encode
-from crypto.PublicKey import RSA
+from Crypto.PublicKey import RSA
 from re import sub
 
 config = {}
@@ -49,7 +49,7 @@ def register():
             session['challenge']=''.join(choices(ascii_uppercase + digits, k=16))
         return render_template("signup.html",token=b64encode(VIPKEY.encrypt(session['challenge'].encode('utf-8'))))
 
-@app.route('/login/', methods=['POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         content = request.form
@@ -97,15 +97,15 @@ def buy():
     flags = cursor.execute('select id, "kappa" as team, cost from kappa union select id, "lcbc" as team, cost from lcbc')
     return render_template("buy.html",flags=flags)
 
-@app.route('/my/', methods=['GET'])
+@app.route('/my/')
 def my():
     cursor = conn.cursor()
     flags = cursor.execute('select id, "kappa" as team, cost, flag from kappa union select id, "lcbc" as team, cost, flag from lcbc')
     return render_template("index.html",flags=flags)
 
 
-@app.route('/buyflag/<int:flag_id>', methods=['POST'])
-def buy(flag_id):
+@app.route('/buyflag/<int:flag_id>', methods=['GET'])
+def buy_flag(flag_id):
     cursor = conn.cursor()
     username = session['username']
     dbdata = cursor.execute("select balance from users where username=%s", (username))
