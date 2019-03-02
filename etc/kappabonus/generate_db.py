@@ -4,6 +4,8 @@ import sys
 
 TEMPLATE = open("db.sql", "r").read()
 
+random.seed(0x13371337)
+
 
 def genstr():
     return ''.join([random.choice(string.ascii_lowercase) for _ in range(20)])
