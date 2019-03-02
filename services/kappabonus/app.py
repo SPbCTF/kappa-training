@@ -68,7 +68,7 @@ def register():
                 is_vip = result == session.get("challenge", None)
                 
                 conn.cursor().execute(
-                    "insert into user (username, password, vip) values (%s, %s, %i)",
+                    "insert into user (username, password, vip) values (%s, %s, %s)",
                     (username, scrypt.hash(password), is_vip)
                 )
 
@@ -157,12 +157,12 @@ def sell():
                 team = "lcbc" if team == "2" else "kappa"
 
                 conn.cursor().execute(
-                    "update into user (balance, posted_flags) values (%i, %i) where username=%s",
+                    "update into user (balance, posted_flags) values (%s, %s) where username=%s",
                     (balance + int(price), posted + 1, username)
                 )
                 conn.cursor().execute(
                     # there is definitely no sql injection
-                    "insert into {team} (flag, cost, username) values (%s, %i, %s)".format(team),
+                    "insert into {team} (flag, cost, username) values (%s, %s, %s)".format(team),
                     (flag, int(price), username)
                 )
 
@@ -216,7 +216,7 @@ def buy_flag(flag_id):
     cursor.close()
 
     cursor = conn.cursor()
-    cursor.execute("select flag, price from kappa where id=%i", (flag_id, ))
+    cursor.execute("select flag, price from kappa where id=%s", (flag_id, ))
     row = cursor.fetchone()
     if row is None:
         return jsonify({"success": False, "reason": "no flag"})
@@ -225,7 +225,7 @@ def buy_flag(flag_id):
     if price > balance:
         return jsonify({"success": False, "reason": "no money - no flags"})
 
-    conn.cursor().execute("update into users (balance) values (%i) where username=%s", (balance - price, username))
+    conn.cursor().execute("update into users (balance) values (%s) where username=%s", (balance - price, username))
 
     return jsonify({"success": True, "flag": flag})
 
