@@ -188,8 +188,8 @@ def check(host):
             quit(Status.DOWN, "Get {} code from postquiz".format(resp.status_code))
 
         if text != flag:
-            log("[postquiz] Flags {} and {} not equal".format(text, flag))
-            quit(Status.MUMBLE, "Flags not equal")
+            log("[postquiz] Flags {} and {} are not equal".format(text, flag))
+            quit(Status.MUMBLE, "Flags are not equal")
 
         order = [i for i in range(0, 5)]
         random.shuffle(order)
