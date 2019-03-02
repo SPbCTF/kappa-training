@@ -54,7 +54,7 @@ def register():
 
         if username and password:
             cursor = conn.cursor()
-            cursor.execute("select username from users where username=%s", (username, ))
+            cursor.execute("select username from user where username=%s", (username, ))
             rows = cursor.rowcount
             cursor.close()
             
@@ -67,7 +67,7 @@ def register():
                 is_vip = result == session.get("challenge", None)
                 
                 conn.cursor().execute(
-                    "insert into users (username, password, vip) values (%s, %s, %i)",
+                    "insert into user (username, password, vip) values (%s, %s, %i)",
                     (username, scrypt.hash(password), is_vip)
                 )
 
@@ -99,7 +99,7 @@ def login():
         password = request.form.get("password", "").strip()
         
         cursor = conn.cursor()
-        cursor.execute("select password, posted_flags from users where username=%s", (username, ))
+        cursor.execute("select password, posted_flags from user where username=%s", (username, ))
         row = cursor.fetchone()
         cursor.close()
         
@@ -125,7 +125,7 @@ def sell():
     username = session["username"]    
 
     cursor = conn.cursor()
-    cursor.execute("select vip from users whee username=%s", (username, ))
+    cursor.execute("select vip from user where username=%s", (username, ))
     row = cursor.fetchone()
     cursor.close()
 
@@ -144,7 +144,7 @@ def sell():
         
             if flag and team in ["1", "2"] and cost > 0 and (vip or cost < 3):
                 cursor = conn.cursor()
-                cursor.execute('select balance, posted_flags from users where username=%s', (username, ))
+                cursor.execute('select balance, posted_flags from user where username=%s', (username, ))
                 row = cursor.fetchone()
                 cursor.close()
                 balance, posted_flags = row
@@ -156,7 +156,7 @@ def sell():
                 team = "lcbc" if team == "2" else "kappa"
 
                 conn.cursor().execute(
-                    "update into users (balance, posted_flags) values (%i, %i) where username=%s",
+                    "update into user (balance, posted_flags) values (%i, %i) where username=%s",
                     (balance + int(price), posted + 1, username)
                 )
                 conn.cursor().execute(
@@ -179,14 +179,26 @@ def sell():
 
 @app.route('/buy/', methods=['GET'])
 def buy():
+    if username not in session:
+        return redirect("/login/")
+    
     cursor = conn.cursor()
-    flags = cursor.execute('select id, "kappa" as team, cost from kappa')
+    cursor.execute('select id, "kappa" as team, cost from kappa')
+    flags = cursor.fetchall()
+    cursor.close()
     return render_template("buy.html",flags=flags)
 
 @app.route('/my/')
 def my():
+    if username not in session:
+        return redirect("/login/")
+    
+    username = session["username"]
+    
     cursor = conn.cursor()
-    flags = cursor.execute('select id, "kappa" as team, cost, flag from kappa union select id, "lcbc" as team, cost, flag from lcbc')
+    cursor.execute('select id, "kappa" as team, cost, flag from kappa where username=%s union select id, "lcbc" as team, cost, flag from lcbc where username=%s', (username, username))
+    flags = cursor.fetchall()
+    cursor.close()
     return render_template("index.html",flags=flags)
 
 
@@ -200,9 +212,10 @@ def buy_flag(flag_id):
     price = dbdata['price']
     flag = dbdata['flag']
     if (balance - price) < 0:
-        return jsonify({'success': False, 'reason': "Недостаточно средств"})
+        return jsonify({'success': False, 'reason': "not enough money"})
     cursor.execute("update into users(balance) values(%i) where username=%s", (balance - price, username))
     return jsonify({'success': True, 'flag': flag})
+
 
 if config["share_flags"] == "true":
     @app.after_request
@@ -210,14 +223,22 @@ if config["share_flags"] == "true":
         response.headers["X-Share-Flags"] = "true"
         return response
 
+
 @app.route('/ref/')
 def ref():
+    if username not in session:
+        return redirect("/login/")
+    
     return render_template("ref.html")
+
 
 @app.route('/logout/')
 def logout():
-    session.clear()
-    return redirect('/login/', code=301)
+    del session["username"]
+    
+    return redirect('/login/')
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3377)
+

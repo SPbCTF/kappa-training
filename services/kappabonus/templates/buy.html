@@ -15,10 +15,10 @@
   <tbody>
     {% for flag in flags %}
     <tr>
-      <td>{{flag.id}}</td>
-      <td><a class="buy-link" href="#" data-id="{{flag.id}}">Buy</a></td>
-      <td>{{flag.team}}</td>
-      <td>${{flag.cost}}</td>
+      <td>{{flag[0]}}</td>
+      <td><a class="buy-link" href="#" data-id="{{flag[0]}}">Buy</a></td>
+      <td>{{flag[1]}}</td>
+      <td>${{flag[2]}}</td>
     </tr>
     {% endfor %}
   </tbody>
