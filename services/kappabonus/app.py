@@ -11,7 +11,7 @@ config = {}
 with open("config.ini", "r") as config_file:
     for line in config_file:
         key, value = line.split("=")
-        config[key] = value
+        config[key] = value.strip()
 
 app = Flask(__name__)
 conn=mysql.connector.connect(
@@ -78,7 +78,7 @@ def register():
             error = "Fill more fields"
 
     token = ''.join(choices(ascii_uppercase + digits, k=16))
-    session['challenge'] = VIPKEY.encrypt(token.encode('utf-8'))
+    session['challenge'] = VIPKEY.encrypt(token.encode('utf-8'), 'x')
     
     return render_template(
         'signup.html', 
@@ -139,7 +139,7 @@ def sell():
 
     if request.method == 'POST':
         flag = request.form.get("flag", "")
-        cost = float(request.form.get("cost", 0)
+        cost = float(request.form.get("cost", 0))
         team = request.form.get("team", "")
         
         if flag and team in ["1", "2"] and cost > 0:
