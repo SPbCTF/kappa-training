@@ -3,7 +3,7 @@ from passlib.hash import scrypt
 from random import choices
 from string import ascii_uppercase, digits
 import mysql.connector
-from base64 import b64encode
+from base64 import b64encode, b64decode
 from Crypto.PublicKey import RSA
 from re import sub
 
@@ -27,74 +27,158 @@ VIP_PUBKEY=b'0\x82\x01"0\r\x06\t*\x86H\x86\xf7\r\x01\x01\x01\x05\x00\x03\x82\x01
 
 VIPKEY=RSA.importKey(VIP_PUBKEY)
 
+
 def sanitize(string):
-    return sub('[^a-zA-Z\d=-]','',string)
+    return sub('[^a-zA-Z0-9-]','',string)
+
 
 @app.route('/')
 def mainpage():
     if not 'username' in session:
-        return redirect("/login/", code=301)
-    return redirect("/my/", code=301)
+        return redirect("/login/")
+    return redirect("/my/")
+
 
 @app.route('/signup/', methods=['POST','GET'])
 def register():
+    if 'username' in session:
+        return redirect("/my/")
+    
+    error = None
     if request.method == 'POST':
         content = request.form
-        (username, password, response) = (content['username'], content['password'], content['promocode'])
-        cursor = conn.cursor()
-        cursor.execute("insert into users(username,password,vip) values (%s,%s,%i)",(sanitize(username),scrypt.hash(password),session['challenge'] == response))
-        return redirect('/login', code=301)
-    else:
-        if not 'challenge' in session:
-            session['challenge']=''.join(choices(ascii_uppercase + digits, k=16))
-        return render_template("signup.html",token=b64encode(VIPKEY.encrypt(session['challenge'].encode('utf-8'))))
+        
+        username = sanitize(request.form.get("username", ""))
+        password = request.form.get("password", "")
+        promocode = request.form.get("promocode", "")
+
+        if username and password:
+            cursor = conn.cursor()
+            cursor.execute("select username from users where username=%s", (username, ))
+            rows = cursor.rowcount
+            cursor.close()
+            
+            if rows == 0:
+                try:
+                    result = VIPKEY.encrypt(b64decode(promocode))
+                except:
+                    result = ""
+
+                is_vip = result == session.get("challenge", None)
+                
+                conn.cursor().execute(
+                    "insert into users (username, password, vip) values (%s, %s, %i)",
+                    (username, scrypt.hash(password), is_vip)
+                )
+
+                return redirect("/login/")
+            else:
+                error = "User exists"
+        else:
+            error = "Fill more fields"
+
+    token = ''.join(choices(ascii_uppercase + digits, k=16))
+    session['challenge'] = VIPKEY.encrypt(token.encode('utf-8'))
+    
+    return render_template(
+        'signup.html', 
+        token=b64encode(session['challenge']),
+        error=error
+    )
+
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
+    if 'username' in session:
+        return redirect("/my/")
+    
+    error = None
+    
     if request.method == 'POST':
-        content = request.form
-        (username,password)=(content['username'],content['password'])
-        cursor=conn.cursor()
-        dbdata=cursor.execute("select password,vip,posted_flags from users where username=%s",(username))
-        if(scrypt.verify(password,dbdata['password'])):
-            if (not session['vip']) and dbdata['posted_flags']>=10:
-                return jsonify({'error': "Ваш аккаунт заблокирован за злоупотребление системой"})
-            session['username']=username
-            session['vip']=dbdata['vip']
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+        
+        cursor = conn.cursor()
+        cursor.execute("select password, posted_flags from users where username=%s", (username, ))
+        row = cursor.fetchone()
+        cursor.close()
+        
+        if row is not None and scrypt.verify(password, row[0]):
+            if row[1] < 10:
+                session['username'] = username
+                return redirect("/my/")
+            else:
+                error = "So much bad flags, you've banned"
         else:
-            return jsonify({'error': "Ваш аккаунт заблокирован за злоупотребление системой"})
-    return Response(status=200)
+            error = "Wrong login or password"
+    return render_template(
+        'login.html',
+        error=error
+    )
+
 
 @app.route('/sell/', methods=['POST','GET'])
 def sell():
+    if 'username' not in session:
+        return redirect("/login/")
+    
+    username = session["username"]    
+
+    cursor = conn.cursor()
+    cursor.execute("select vip from users whee username=%s", (username, ))
+    row = cursor.fetchone()
+    cursor.close()
+
+    if row is None:
+        del session["username"]
+        return redirect("/login/")
+
+    vip = row[0]
+
+    error = None
+
     if request.method == 'POST':
-        content = request.form
-        (flag,price,team)=(content['flag'],float(['cost']),content['team'])
-        if price < 0:
-            return Response(status=400)
-        cursor=conn.cursor()
-        username=session['username']
-        dbdata = cursor.execute("select balance, posted_flags from users where username=%s", (username))
-        balance=dbdata['balance']
-        posted = dbdata['posted_flags']
-        if not session['vip']:
-            if len(content['cost'])>3:
-                return Response(status=400)
-            if posted>=10:
-                session.clear()
-                return redirect('/login/', code=301)
-        if team==2:
-            team="lcbc"
+        flag = request.form.get("flag", "")
+        cost = float(request.form.get("cost", 0)
+        team = request.form.get("team", "")
+        
+        if flag and team in ["1", "2"] and cost > 0:
+            cursor = conn.cursor()
+            cursor.execute('select balance, posted_flags from users where username=%s', (username, ))
+            row = cursor.fetchone()
+            cursor.close()
+            balance, posted_flags = row
+            
+            if posted_flags >= 10:
+                del session["username"]
+                return redirect("/login/")
+            
+            team = "lcbc" if team == "2" else "kappa"
+
+            conn.cursor().execute(
+                "update into users (balance, posted_flags) values (%i, %i) where username=%s",
+                (balance + int(price), posted + 1, username)
+            )
+            conn.cursor().execute(
+                # there is definitely no sql injection
+                "insert into {team} (flag, cost, username) values (%s, %i, %s)".format(team),
+                (flag, int(price), username)
+            )
+
+            return redirect("/my/")
         else:
-            team="kappa"
-        cursor.execute(f"insert into {team}(flag,cost,username) values(%s,%i,%s)",(flag,int(price),username))
-        cursor.execute("update into users(balance,posted_flags) values(%i,%i) where username=%s",(balance+price,posted+1,username))
-    return Response(status=200)
+            error = "Fill form correctly"
+            
+    return render_template(
+        "sell.html",
+        error=error
+    )
+
 
 @app.route('/buy/', methods=['GET'])
 def buy():
     cursor = conn.cursor()
-    flags = cursor.execute('select id, "kappa" as team, cost from kappa union select id, "lcbc" as team, cost from lcbc')
+    flags = cursor.execute('select id, "kappa" as team, cost from kappa')
     return render_template("buy.html",flags=flags)
 
 @app.route('/my/')
