@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import sys
@@ -68,7 +67,7 @@ def check(host):
             log("RKN BAN, Yahoo")
             quit(Status.MUMBLE, "RKN banned you")
 
-        if resp.text == "You will unbanned":
+        if resp.text == "You will be unbanned":
             log("RKN unban")
             quit(Status.MUMBLE, "Request to unban")
 
@@ -92,7 +91,7 @@ def check(host):
             log("RKN BAN, Yahoo")
             quit(Status.MUMBLE, "RKN banned you")
 
-        if resp.text == "You will unbanned":
+        if resp.text == "You will be unbanned":
             log("RKN unban")
             quit(Status.MUMBLE, "Request to unban")
 
@@ -189,8 +188,8 @@ def check(host):
             quit(Status.DOWN, "Get {} code from postquiz".format(resp.status_code))
 
         if text != flag:
-            log("[postquiz] Flags {} and {} not equal".format(text, flag))
-            quit(Status.MUMBLE, "Flags not equal")
+            log("[postquiz] Flags {} and {} are not equal".format(text, flag))
+            quit(Status.MUMBLE, "Flags are not equal")
 
         order = [i for i in range(0, 5)]
         random.shuffle(order)
