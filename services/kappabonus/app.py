@@ -4,7 +4,7 @@ from random import choices
 from string import ascii_uppercase, digits
 import mysql.connector
 from base64 import b64encode
-from Crypto.PublicKey import RSA
+from pycrypto.PublicKey import RSA
 from re import sub
 
 app = Flask(__name__)
@@ -60,7 +60,7 @@ def login():
 def sell():
     if request.method == 'POST':
         content = request.form
-        (flag,price,team)=(content['flag'],content['cost'],content['team'])
+        (flag,price,team)=(content['flag'],float(['cost']),content['team'])
         if price < 0:
             return Response(status=400)
         cursor=conn.cursor()
@@ -69,7 +69,7 @@ def sell():
         balance=dbdata['balance']
         posted = dbdata['posted_flags']
         if not session['vip']:
-            if price>999:
+            if len(content['cost'])>3:
                 return Response(status=400)
             if posted>=10:
                 session.clear()
@@ -78,7 +78,7 @@ def sell():
             team="lcbc"
         else:
             team="kappa"
-        cursor.execute(f"insert into {team}(flag,cost,username) values(%s,%i,%s)",(flag,price,username))
+        cursor.execute(f"insert into {team}(flag,cost,username) values(%s,%i,%s)",(flag,int(price),username))
         cursor.execute("update into users(balance,posted_flags) values(%i,%i) where username=%s",(balance+price,posted+1,username))
     return Response(status=200)
 
