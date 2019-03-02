@@ -1,6 +1,6 @@
 create database `{team}`;
 
-create table `user` (
+create table `{team}`.`user` (
 	`username` varchar(40) not null,
 	`password` char(82) not null,
 	`balance` bigint default 0,
@@ -9,14 +9,14 @@ create table `user` (
 	primary key(`username`)
 );
 
-create table `kappa` (
+create table `{team}`.`kappa` (
     `id` int not null auto_increment,
 	`flag` char(32) not null,
 	`cost` bigint not null,
 	primary key(`id`)
 );
 
-create table `lcbc` (
+create table `{team}`.`lcbc` (
     `id` int not null auto_increment,
 	`flag` char(32) not null,
 	`cost` bigint not null,
