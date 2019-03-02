@@ -56,6 +56,7 @@ def register():
             cursor = conn.cursor()
             cursor.execute("select username from user where username=%s", (username, ))
             rows = cursor.rowcount
+            cursor.fetchall()
             cursor.close()
             
             if rows == 0:
