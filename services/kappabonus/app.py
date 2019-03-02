@@ -4,7 +4,7 @@ from random import choices
 from string import ascii_uppercase, digits
 import mysql.connector
 from base64 import b64encode
-from pycrypto.PublicKey import RSA
+from crypto.PublicKey import RSA
 from re import sub
 
 config = {}
