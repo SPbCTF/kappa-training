@@ -78,7 +78,7 @@ def register():
             error = "Fill more fields"
 
     token = ''.join(choices(ascii_uppercase + digits, k=16))
-    session['challenge'] = VIPKEY.encrypt(token.encode('utf-8'), 'x')
+    session['challenge'] = VIPKEY.encrypt(token.encode('utf-8'), 0)[0]
     
     return render_template(
         'signup.html', 
