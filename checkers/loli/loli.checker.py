@@ -225,7 +225,7 @@ def check(host):
 
         quit(Status.OK)
 
-    except ConnectionError:
+    except requests.ConnectionError:
         quit(Status.DOWN, "Can't connect to service")
 
 
@@ -268,7 +268,7 @@ def put(host, flag_id, flag, vuln):
 
         quit(Status.OK, "{}:{}".format(flag_id, answer))
 
-    except ConnectionError:
+    except requests.ConnectionError:
         quit(Status.DOWN, "Can't connect to service")
 
 
@@ -317,7 +317,7 @@ def get(host, flag_id, flag, vuln):
 
         quit(Status.OK)
 
-    except ConnectionError:
+    except requests.ConnectionError:
         quit(Status.DOWN, "Can't connect to service")
 
 
