@@ -9,4 +9,4 @@ WORKDIR /root/
 COPY . .
 RUN mkdir /root/users
 RUN chmod +x /root/main
-CMD ["/root/runserver.sh"]
+CMD ["socat", "-T", "60", "tcp-l:7878,fork,reuseaddr", "exec:/root/main"]
