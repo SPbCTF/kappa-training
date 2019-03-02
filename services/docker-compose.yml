@@ -1,0 +1,26 @@
+version: "3.6"
+services:
+    hipstore:
+        image: hipstore
+        build: hipstore
+        ports:
+            - "7878:7878"
+        volumes:
+            - "./hipstore/main:/root/main"
+            - "./hipstore/users/:/root/users/"
+        restart: always
+    loli:
+        image: loli
+        build: loli
+        ports:
+            - "4242:4242"
+        volumes:
+            - "./loli/:/root/"
+    wroteup:
+        image: wroteup
+        build: wroteup
+        ports:
+            - "5000:5000"
+        volumes:
+            - "./wroteup/db.db:/root/db.db"
+
