@@ -294,6 +294,10 @@ def get(host, flag_id, flag, vuln):
             log("RKN unban")
             quit(Status.MUMBLE, "Request to unban")
 
+        if resp.status_code == 400:
+            log("Quiz not found")
+            quit(Status.CORRUPT, "Quiz not found")
+
         text = resp.text
         code = resp.status_code // 100
 
