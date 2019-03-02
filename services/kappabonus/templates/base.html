@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>{% block name %}{% endblock %} · Kappa Bonus</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="/static/dashboard.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <nav class="navbar navbar-kappa fixed-top flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Kappa Bonus</a>
+      <a class="nav-link" href="#" style="color: white;">{{ session.username }}</a>
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link" href="/logout/" style="color: white;">Logout</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link {% if page == 'my' %}active{% endif %}" href="/my/">
+                  <span data-feather="home"></span>
+                  Мои флаги 
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% if page == 'sell' %}active{% endif %}" href="/submit/">
+                  <span data-feather="file"></span>
+                  Отправка
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% if page == 'buy' %}active{% endif %}" href="/buy/">
+                  <span data-feather="shopping-cart"></span>
+                  Покупка
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% if page == 'ref' %}active{% endif %}" href="/ref/">
+                  <span data-feather="users"></span>
+                  Рефералы
+                </a>
+              </li>
+            </ul>
+
+          </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">{% block name %}{% endblock %}</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group mr-2">
+                <a class="btn btn-sm btn-outline-secondary" href="https://vk.com/share.php?url=https%3A%2F%2Fkappactf.ru%2Fbonus%2F">Поделиться</a>
+              </div>
+              <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                <span data-feather="calendar"></span>
+                Кубок Каппы
+              </button>
+            </div>
+          </div>
+          
+          {% block content %}
+          {% endblock %}          
+        </main>
+      </div>
+    </div>
+    
+    <div style="z-index: 9999; background: #fff; position: fixed; left: 0; right: 0; bottom: 0; margin: 0; padding: 0.3rem; box-sizing: border-box; font-size: 0.6rem;">
+        <p style="margin: 0.1rem;">Перед участием ознакомьтесь с <a href="https://kappactf.ru/assets/files/bonus.pdf">правилами участия в программа «Kappa Бонус»</a></p>
+    </div>
+    
+    {% block extra %}
+    {% endblock %}
+ 
+  </body>
+</html>

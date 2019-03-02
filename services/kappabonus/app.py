@@ -1,4 +1,4 @@
-from flask import Flask,session,request, Response, redirect
+from flask import Flask,session,request, Response, redirect, jsonify, render_template
 from passlib.hash import scrypt
 from random import choices
 from string import ascii_uppercase, digits
@@ -24,23 +24,23 @@ def sanitize(string):
 @app.route('/')
 def mainpage():
     if not 'username' in session:
-        return redirect("/login", code=301)
-    return 'hi'
+        return redirect("/login/", code=301)
+    return redirect("/my/", code=301)
 
-@app.route('/register', methods=['POST','GET'])
+@app.route('/signup/', methods=['POST','GET'])
 def register():
     if request.method == 'POST':
         content = request.form
-        (username, password, response) = (content['username'], content['password'], content['response'])
+        (username, password, response) = (content['username'], content['password'], content['promocode'])
         cursor = conn.cursor()
         cursor.execute("insert into users(username,password,vip) values (%s,%s,%i)",(sanitize(username),scrypt.hash(password),session['challenge'] == response))
         return redirect('/login', code=301)
     else:
         if not 'challenge' in session:
             session['challenge']=''.join(choices(ascii_uppercase + digits, k=16))
-        return b64encode(VIPKEY.encrypt(session['challenge'].encode('utf-8')))
+        return render_template("signup.html",token=b64encode(VIPKEY.encrypt(session['challenge'].encode('utf-8'))))
 
-@app.route('/login', methods=['POST','GET'])
+@app.route('/login/', methods=['POST'])
 def login():
     if request.method == 'POST':
         content = request.form
@@ -49,16 +49,18 @@ def login():
         dbdata=cursor.execute("select password,vip,posted_flags from users where username=%s",(username))
         if(scrypt.verify(password,dbdata['password'])):
             if (not session['vip']) and dbdata['posted_flags']>=10:
-                return "Ваш аккаунт заблокирован за злоупотребление системой"
+                return jsonify({'error': "Ваш аккаунт заблокирован за злоупотребление системой"})
             session['username']=username
             session['vip']=dbdata['vip']
+        else:
+            return jsonify({'error': "Ваш аккаунт заблокирован за злоупотребление системой"})
     return Response(status=200)
 
-@app.route('/sell', methods=['POST','GET'])
+@app.route('/sell/', methods=['POST','GET'])
 def sell():
     if request.method == 'POST':
         content = request.form
-        (flag,price)=(content['flag'],content['price'])
+        (flag,price,team)=(content['flag'],content['cost'],content['team'])
         if price < 0:
             return Response(status=400)
         cursor=conn.cursor()
@@ -71,34 +73,55 @@ def sell():
                 return Response(status=400)
             if posted>=10:
                 session.clear()
-                return redirect('/login', code=301)
+                return redirect('/login/', code=301)
+        if team==2:
+            team="lcbc"
+        else:
+            team="kappa"
+        cursor.execute(f"insert into {team}(flag,cost,username) values(%s,%i,%s)",(flag,price,username))
         cursor.execute("update into users(balance,posted_flags) values(%i,%i) where username=%s",(balance+price,posted+1,username))
     return Response(status=200)
 
-@app.route('/buy', methods=['POST','GET'])
+@app.route('/buy/', methods=['GET'])
 def buy():
-    if request.method == 'POST':
-        content = request.form
-        (id,team)=(content['id'],content['team'])
-        cursor=conn.cursor()
-        username=session['username']
-        dbdata = cursor.execute("select balance from users where username=%s", (username))
-        balance = dbdata['balance']
-        if team!='kappa' or team!='lcbc':
-            return Response(status=500)
-        dbdata = cursor.execute(f"select flag,price from {team} where id=%i", (id))
-        price = dbdata['price']
-        flag = dbdata['flag']
-        if (balance-price)<0:
-            return "Недостаточно средств"
-        cursor.execute("update into users(balance) values(%i) where username=%s",(balance-price,username))
-        return flag
-    return Response(status=200)
+    cursor = conn.cursor()
+    flags = cursor.execute('select id, "kappa" as team, cost from kappa union select id, "lcbc" as team, cost from lcbc')
+    return render_template("buy.html",flags=flags)
 
-@app.route('/logout')
+@app.route('/my/', methods=['GET'])
+def my():
+    cursor = conn.cursor()
+    flags = cursor.execute('select id, "kappa" as team, cost, flag from kappa union select id, "lcbc" as team, cost, flag from lcbc')
+    return render_template("index.html",flags=flags)
+
+
+@app.route('/buyflag/<int:flag_id>', methods=['POST'])
+def buy(flag_id):
+    cursor = conn.cursor()
+    username = session['username']
+    dbdata = cursor.execute("select balance from users where username=%s", (username))
+    balance = dbdata['balance']
+    dbdata = cursor.execute("select flag,price from kappa where id=%i", (flag_id))
+    price = dbdata['price']
+    flag = dbdata['flag']
+    if (balance - price) < 0:
+        return jsonify({'success': False, 'reason': "Недостаточно средств"})
+    cursor.execute("update into users(balance) values(%i) where username=%s", (balance - price, username))
+    return jsonify({'success': True, 'flag': flag})
+
+@app.after_request
+def sharing_with_buddies(response):
+    response.headers["X-Share-Flags"] = SHARE_FLAGS
+    return response
+
+@app.route('/ref/')
+def ref():
+    return render_template("ref.html")
+
+@app.route('/logout/')
 def logout():
     session.clear()
-    return redirect('/login', code=301)
+    return redirect('/login/', code=301)
 
 if __name__ == '__main__':
     app.run()

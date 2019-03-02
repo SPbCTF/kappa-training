@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Welcome to Kappa Bonus!</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/static/signin.css" rel="stylesheet">
+  </head>
+  <body class="text-center">
+    <form class="form-signin" action="" method="POST">
+    {% if error %}<div class="alert alert-warning">{{ error }}</div>{% endif %}
+  <img class="mb-4" src="/static/kappa.png" alt="" width="150" height="150">
+  <h1 class="mb-3">Kappa Bonus</h1>
+  <input type="text" id="username" name="username" class="form-control top" placeholder="Login" required autofocus>
+  <input type="password" id="password" name="password" class="form-control bottom" placeholder="Password" required>
+  
+  <p class="promo">To get VIP account send me promocode:<br/><b>[{{token}}]</b></p>
+  
+  <input type="text" id="promocode" name="promocode" class="form-control mb-3" placeholder="Promo code" required autofocus>
+  
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+  <p class="mt-3"><a href="/login/">Have an account?</a></p>
+</form>
+</body>
+</html>

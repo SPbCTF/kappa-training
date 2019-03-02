@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block name %}Продажа{% endblock %}
+{% block content %}
+<form method="POST" action="">
+  {% if error %}<div class="alert alert-warning">{{ error }}</div>{% endif %}
+  <div class="form-group">
+    <label for="flag">Флаг</label>
+    <input type="text" id="flag" class="form-control" name="flag" placeholder="32 символа" />
+    <small class="form-text text-muted">Ввод неправильных флагов приведет к бану в программе</small>
+  </div>
+  <div class="form-group">
+    <label for="team">Команда</label>
+    <select class="form-control" name="team" id="team">
+        <option value="1">Kappa</option>
+        <option value="2">LC�BC</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="cost">Цена</label>
+    <input type="number" class="form-control" id="cost" name="cost" min="0" max="999">
+    <small class="form-text text-muted">Обычные аккаунты могут продавать флаги не дороже $999</small>
+  </div>
+  <button type="submit" class="btn btn-primary">Отправить</button>
+</form>
+{% endblock %}
