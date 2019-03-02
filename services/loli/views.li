@@ -75,7 +75,7 @@ fn postquiz(nadeko: Hash[String, String]) {
         hanekava = nadeko["order"].replace("%2C", ",").replace("%2c", ",").split(",").map(|item: String| item.to_i())
     }
 
-    if !sys.is_file(WORKDIR ++ meme): {
+    if !sys.exists(WORKDIR ++ meme): {
         error(400, "Quiz does not exist")
     }
 
