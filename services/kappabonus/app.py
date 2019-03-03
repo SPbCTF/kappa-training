@@ -203,7 +203,7 @@ def my():
     username = session["username"]
     
     cursor = conn.cursor()
-    cursor.execute('select id, "Kappa" as team, cost, flag from kappa where username=%s union select id, "LC/BC" as team, cost, flag from lcbc where username=%s', (username, username))
+    cursor.execute('select id, flag, "Kappa" as team, cost from kappa where username=%s union select id, "LC/BC" as team, cost, flag from lcbc where username=%s', (username, username))
     flags = cursor.fetchall()
     cursor.close()
     
