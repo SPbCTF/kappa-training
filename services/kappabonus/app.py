@@ -128,7 +128,7 @@ def sell():
     username = session["username"]    
 
     cursor = conn.cursor()
-    cursor.execute("select vip from user where username=%s", (username, ))
+    cursor.execute("select vip, balance from user where username=%s", (username, ))
     row = cursor.fetchone()
     cursor.close()
 
@@ -136,7 +136,7 @@ def sell():
         del session["username"]
         return redirect("/login/")
 
-    vip = row[0]
+    vip, balance = row
     error = None
 
     if request.method == 'POST':
@@ -180,6 +180,7 @@ def sell():
     return render_template(
         "sell.html",
         error=error,
+        balance=balance,
         vip=vip
     )
 
