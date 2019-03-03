@@ -190,7 +190,7 @@ def buy():
         return redirect("/login/")
     
     cursor = conn.cursor()
-    cursor.execute('select id, "kappa" as team, cost from kappa')
+    cursor.execute('select id, "Kappa" as team, cost from kappa')
     flags = cursor.fetchall()
     cursor.close()
     return render_template("buy.html",flags=flags)
@@ -223,16 +223,16 @@ def buy_flag(flag_id):
     cursor.close()
 
     cursor = conn.cursor()
-    cursor.execute("select flag, price from kappa where id=%s", (flag_id, ))
+    cursor.execute("select flag, cost from kappa where id=%s", (flag_id, ))
     row = cursor.fetchone()
     if row is None:
         return jsonify({"success": False, "reason": "no flag"})
-    flag, price = row
+    flag, cost = row
 
-    if price > balance:
+    if cost > balance:
         return jsonify({"success": False, "reason": "no money - no flags"})
 
-    conn.cursor().execute("update user set balance=%s where username=%s", (balance - price, username))
+    conn.cursor().execute("update user set balance=%s where username=%s", (balance - cost, username))
 
     conn.commit()
 
