@@ -90,7 +90,7 @@ def register():
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
-    if 'username' in session:
+    if 'username' in sesson:
         return redirect("/my/")
     
     error = None
@@ -180,7 +180,7 @@ def sell():
 
 @app.route('/buy/', methods=['GET'])
 def buy():
-    if username not in session:
+    if 'username' not in session:
         return redirect("/login/")
     
     cursor = conn.cursor()
@@ -191,7 +191,7 @@ def buy():
 
 @app.route('/my/')
 def my():
-    if username not in session:
+    if 'username' not in session:
         return redirect("/login/")
     
     username = session["username"]
@@ -205,7 +205,7 @@ def my():
 
 @app.route('/buyflag/<int:flag_id>', methods=['GET'])
 def buy_flag(flag_id):
-    if username not in session:
+    if 'username' not in session:
         return jsonify({"success": False, "reason": "login first"})
     username = session["username"]
 
@@ -239,7 +239,7 @@ if config["share_flags"] == "true":
 
 @app.route('/ref/')
 def ref():
-    if username not in session:
+    if 'username' not in session:
         return redirect("/login/")
     
     return render_template("ref.html")
@@ -247,7 +247,7 @@ def ref():
 
 @app.route('/logout/')
 def logout():
-    del session["username"]
+    session.pop("username", None)
     
     return redirect('/login/')
 
