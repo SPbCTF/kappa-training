@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cstring>
 #include <iterator>
+//#include <signal.h>
+#include <unistd.h>
 //#include "libgen.h"
 
 namespace fs = std::filesystem;
@@ -362,8 +364,13 @@ void printListUsers() {
 }
 
 
+
 int main() {
     // ToDo may be save data of users rigth away after registration?
+
+    alarm(10);
+
+
     fs::create_directory("users");
     std::cout << "Welcome to our hipstore service!\nHere you can purchase spinners and vapers!" << std::endl;
     bool isEnd = false;
