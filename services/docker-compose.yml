@@ -16,6 +16,7 @@ services:
             - "4242:4242"
         volumes:
             - "./loli/data/:/loli/"
+            - "./loli/data/users:/loli/users"
         restart: always
         mem_limit: 500m
     wroteup:
