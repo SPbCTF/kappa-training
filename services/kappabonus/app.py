@@ -72,7 +72,7 @@ def register():
                     (username, sha256(password.encode()).hexdigest(), is_vip)
                 )
 
-                conn.cursor().commit()
+                conn.commit()
 
                 return redirect("/login/")
             else:
