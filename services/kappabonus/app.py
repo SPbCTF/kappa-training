@@ -142,13 +142,14 @@ def sell():
         if vip or len(cost) < 4:
             flag = request.form.get("flag", "")
             team = request.form.get("team", "")
-        
-            if flag and team in ["1", "2"] and cost > 0 and (vip or cost < 3):
+            
+            if flag and team in ["1", "2"]:
                 cursor = conn.cursor()
                 cursor.execute('select balance, posted_flags from user where username=%s', (username, ))
                 row = cursor.fetchone()
                 cursor.close()
                 balance, posted_flags = row
+                cost = float(cost)
                 
                 if posted_flags >= 10:
                     del session["username"]
