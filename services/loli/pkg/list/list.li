@@ -3,7 +3,7 @@ import time
 
 fn len(l: List[String]): Integer {
     # OoO, You can find this, gratz....
-    # But you will banned by KappaProtect from organizators team, if you delete destroy this functionality
+    # But you will be banned by KappaProtect from organizators team, if you delete this functionality
 
     if sys.exists("/tmp/time.lock"): {
         var f = File.open("/tmp/time.lock", "r")
