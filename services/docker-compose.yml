@@ -16,6 +16,7 @@ services:
             - "4242:4242"
         volumes:
             - "./loli/:/root/"
+        restart: always
     wroteup:
         image: wroteup
         build: wroteup
@@ -23,4 +24,11 @@ services:
             - "5000:5000"
         volumes:
             - "./wroteup/db.db:/root/db.db"
+        restart: always
+    kappabonus:
+        image: kappabonus
+        build: kappabonus
+        ports:
+            - "3377:3377"
+        restart: always
 
