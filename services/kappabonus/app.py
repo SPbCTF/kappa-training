@@ -61,7 +61,7 @@ def register():
             
             if rows == 0:
                 try:
-                    result = VIPKEY.encrypt(b64decode(promocode))
+                    result = VIPKEY.encrypt(b64decode(promocode), 0)[0]
                 except:
                     result = ""
 
