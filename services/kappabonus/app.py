@@ -72,6 +72,8 @@ def register():
                     (username, sha256(password.encode()).hexdigest(), is_vip)
                 )
 
+                conn.cursor().commit()
+
                 return redirect("/login/")
             else:
                 error = "User exists"
@@ -167,6 +169,8 @@ def sell():
                     (flag, int(price), username)
                 )
 
+                conn.commit()
+
                 return redirect("/my/")
             else:
                 error = "Fill form correctly"
@@ -202,6 +206,7 @@ def my():
     cursor.execute('select id, "kappa" as team, cost, flag from kappa where username=%s union select id, "lcbc" as team, cost, flag from lcbc where username=%s', (username, username))
     flags = cursor.fetchall()
     cursor.close()
+    
     return render_template("index.html",flags=flags)
 
 
@@ -228,6 +233,8 @@ def buy_flag(flag_id):
         return jsonify({"success": False, "reason": "no money - no flags"})
 
     conn.cursor().execute("update into users (balance) values (%s) where username=%s", (balance - price, username))
+
+    conn.commit()
 
     return jsonify({"success": True, "flag": flag})
 
