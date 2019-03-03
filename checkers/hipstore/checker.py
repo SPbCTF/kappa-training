@@ -81,7 +81,8 @@ def check(host):
             sock.send(password+'\n')
 
             # check money and send token
-            money, token, *trash = sock.recvuntil('\n\n').decode("utf-8").split('\n')
+            resp = sock.recvuntil('\n\n').decode("utf-8")
+            money, token, *trash = resp.split('\n')
             if 'money' not in money:
                 quit(Status.MUMBLE, 'No \'money\' in output')
             token = token.split(' ')[3]
@@ -96,7 +97,6 @@ def check(host):
                 quit(Status.MUMBLE, 'New user not found in the list')
 
             # buy random thing
-            sock.recvuntil('Quit\n\n')
             sock.send('2\n')
 
             spinners = sock.recvuntil('\n\n').decode("utf-8")
@@ -232,7 +232,8 @@ def put(host, flag_id, flag, vuln):
         quit(Status.OK, username, token, sep=':')
     except PwnlibException as e:
         quit(Status.DOWN, 'Failed to connect')
-
+    except EOFError:
+        quit(Status.DOWN, 'Failed to recv smth')
 
 def get(host, flag_id, flag, vuln):
     try:
@@ -264,7 +265,8 @@ def get(host, flag_id, flag, vuln):
         quit(Status.OK)
     except PwnlibException as e:
         quit(Status.DOWN, 'Failed to connect')
-
+    except EOFError:
+        quit(Status.DOWN, 'Failed to recv smth')
 
 def main():
     self_file, action, *args = argvv
