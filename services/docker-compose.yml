@@ -31,6 +31,8 @@ services:
     kappabonus:
         image: kappabonus
         build: kappabonus
+        volumes:
+            - "./kappabonus/config.ini:/app/config.ini"
         ports:
             - "3377:3377"
         restart: always
