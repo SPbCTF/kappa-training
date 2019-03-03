@@ -15,7 +15,7 @@ services:
         ports:
             - "4242:4242"
         volumes:
-            - "./loli/:/root/"
+            - "./loli/:/loli/"
         restart: always
     wroteup:
         image: wroteup
