@@ -23,7 +23,7 @@ services:
         ports:
             - "50000:50000"
         volumes:
-            - "./wroteup/db.db:/root/db.db"
+            - "./wroteup/db.db:/go/src/github.com/kappactf/spbctf-20190303/services/wroteup/db.db"
         restart: always
     kappabonus:
         image: kappabonus
