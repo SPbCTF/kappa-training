@@ -191,7 +191,7 @@ def buy():
         return redirect("/login/")
     
     cursor = conn.cursor()
-    cursor.execute('select id, "Kappa" as team, cost from kappa')
+    cursor.execute('select id, "Kappa" as team, cost from kappa order by id desc limit 50')
     flags = cursor.fetchall()
     cursor.close()
     return render_template("buy.html",flags=flags)
