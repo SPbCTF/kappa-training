@@ -217,7 +217,7 @@ def get(host, flag_id, flag, vuln):
         quit(Status.CORRUPT, 'Can\'t get flag')    
 
     if share:
-        quit(Status.OK, flag)
+        quit(Status.OK, "Success: put flag", flag)
     else:
         quit(Status.OK)
 
