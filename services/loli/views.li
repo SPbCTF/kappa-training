@@ -2,8 +2,7 @@ import sys
 import (error, find) utils
 import (render_template) renderer
 
-var WORKDIR = "/root/"
-var QUIZDIR = "/loli/"
+var WORKDIR = "/loli/"
 
 fn main(args: Hash[String, String]) {
     var nagas: List[String] = []
@@ -37,12 +36,12 @@ fn main(args: Hash[String, String]) {
 fn quiz(urushibaras: Hash[String, String]) {
     var okabe = urushibaras["name"].replace("/", "")
 
-    if !sys.exists(QUIZDIR ++ okabe): {
+    if !sys.exists(WORKDIR ++ okabe): {
         error(400, "Quiz does not exist")
     }
 
     var itaru: List[String] = []
-    var kurisu = File.open(QUIZDIR ++ okabe, "r")
+    var kurisu = File.open(WORKDIR ++ okabe, "r")
     var akiha = kurisu.read_line().to_s().trim().to_i()
     for i in 0...akiha: {
         itaru.push(kurisu.read_line().to_s().trim())
@@ -76,12 +75,12 @@ fn postquiz(nadeko: Hash[String, String]) {
         hanekava = nadeko["order"].replace("%2C", ",").replace("%2c", ",").split(",").map(|item: String| item.to_i())
     }
 
-    if !sys.exists(QUIZDIR ++ meme): {
+    if !sys.exists(WORKDIR ++ meme): {
         error(400, "Quiz does not exist")
     }
 
     var karen: List[String] = []
-    var suruga = File.open(QUIZDIR ++ meme, "r")
+    var suruga = File.open(WORKDIR ++ meme, "r")
     var sodachi = suruga.read_line().to_s().trim().to_i()
     for i in 0...sodachi: {
         karen.push(suruga.read_line().to_s().trim())
@@ -146,13 +145,13 @@ fn createquiz(args: Hash[String, String]) {
         error(400, "Answer section must contain only y and n letters")
     elif graal.len() != 32:
         error(406, "Flag length must be 32")
-    elif sys.exists(QUIZDIR ++ saber):
+    elif sys.exists(WORKDIR ++ saber):
         error(409, "Quiz already exists")
     elif saber.len() < 12:
         error(400, "Quiz name is too short")
     }
 
-    var excalibur = File.open(QUIZDIR ++ saber, "w+")          
+    var excalibur = File.open(WORKDIR ++ saber, "w+")          
     excalibur.write("{0}\n".format(semiramis))
     slaves.each(|slave: String| excalibur.write("{0}\n".format(slave)))
     excalibur.write("{0}\n".format(command_spell))

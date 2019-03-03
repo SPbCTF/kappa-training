@@ -6,7 +6,7 @@ RUN apt-get -y install xinetd
 
 WORKDIR /root/
 COPY . . 
-RUN mkdir /root/users
+RUN mkdir /loli/users
 RUN cp xinetd.conf /etc/xinetd.d/loli
 RUN service xinetd restart
 
