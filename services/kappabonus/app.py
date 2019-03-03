@@ -5,7 +5,7 @@ import mysql.connector
 from base64 import b64encode, b64decode
 from Crypto.PublicKey import RSA
 from re import sub
-from hashlib import sha512
+from hashlib import sha256
 
 
 config = {}
@@ -69,7 +69,7 @@ def register():
                 
                 conn.cursor().execute(
                     "insert into user (username, password, vip) values (%s, %s, %s)",
-                    (username, sha512(password.encode()).hexdigest(), is_vip)
+                    (username, sha256(password.encode()).hexdigest(), is_vip)
                 )
 
                 return redirect("/login/")
@@ -104,7 +104,7 @@ def login():
         row = cursor.fetchone()
         cursor.close()
         
-        if row is not None and sha512(password.encode()).hexdigest() == row[0]:
+        if row is not None and sha256(password.encode()).hexdigest() == row[0]:
             if row[1] < 10:
                 session['username'] = username
                 return redirect("/my/")
