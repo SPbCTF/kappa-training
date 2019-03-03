@@ -165,7 +165,7 @@ def sell():
                 )
                 conn.cursor().execute(
                     # there is definitely no sql injection
-                    "insert into {team} (flag, cost, username) values (%s, %s, %s)".format(team),
+                    "insert into {team} (flag, cost, username) values (%s, %s, %s)".format(team=team),
                     (flag, int(cost), username)
                 )
 
