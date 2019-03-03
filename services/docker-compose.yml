@@ -21,7 +21,7 @@ services:
         image: wroteup
         build: wroteup
         ports:
-            - "5000:5000"
+            - "50000:50000"
         volumes:
             - "./wroteup/db.db:/root/db.db"
         restart: always
