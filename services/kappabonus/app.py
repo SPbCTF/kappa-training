@@ -207,7 +207,7 @@ def my():
     flags = cursor.fetchall()
     cursor.close()
     
-    return render_template("index.html",flags=flags)
+    return render_template("my.html",flags=flags)
 
 
 @app.route('/buyflag/<int:flag_id>', methods=['GET'])
