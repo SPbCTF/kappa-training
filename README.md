@@ -6,7 +6,10 @@
 
 | Сервис | Язык | Сервис | Чекер | Сплойты | etc |
 |--------|------|--------|-------|---------|-----|
+| **hipstore** | C++ | [Сервис](services/hipstore/) | [Чекер](checkers/hipstore/) | [Сплойты](sploits/hipstore/) | [Исходник](etc/hipstore/main.cpp) |
 | **kappabonus** | Python | [Сервис](services/kappabonus/) | [Чекер](checkers/kappabonus/) | [Сплойты](sploits/kappabonus/) | [Облако](etc/kappabonus/) |
+| **loli** | Loli | [Сервис](services/loli/) | [Чекер](checkers/loli/) | [Сплойты](sploits/loli/) | |
+| **wroteup** | Go | [Сервис](service/wroteup/) | [Чекер](checkers/wroteup/) | [Сплойты](sploits/wroteup/) | |
 
 ## Лицензия
 «РАзрешено всем, кроме Арсиба и Александра Ходорожко» — [LICENSE.ABAGPL.txt](LICENSE.ABAGPL.txt)
