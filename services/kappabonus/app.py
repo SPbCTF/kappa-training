@@ -171,7 +171,9 @@ def sell():
 
                 conn.commit()
 
-                return redirect("/my/")
+                flag_id = conn.insert_id()
+
+                return redirect(f"/my/?flag_id={flag_id}")
             else:
                 error = "Fill form correctly"
         else:
