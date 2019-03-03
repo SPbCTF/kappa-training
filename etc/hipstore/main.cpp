@@ -392,7 +392,7 @@ int main() {
         try {
             cmd = std::stoi(s_cmd);
         } catch (...) {
-            cmd = 5;
+            cmd = 0;
         }
 
         switch (cmd) {
