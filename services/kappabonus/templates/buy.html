@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block name %}Покупка{% endblock %}
+{% block title %}Биржа мем^W флагов{% endblock %}
+{% block content %}
+<h2>Последние флаги Каппы на бирже</h2>
+<div class="table-responsive">
+<table class="table table-striped table-sm">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Флаг</th>
+      <th>Команда</th>
+      <th>Стоимость</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for flag in flags %}
+    <tr>
+      <td>{{flag[0]}}</td>
+      <td><a class="buy-link" href="#" data-id="{{flag[0]}}">Buy</a></td>
+      <td>{{flag[1]}}</td>
+      <td>${{flag[2]}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}
+{% block extra %}
+<script>
+window.onload = function() {
+    let handler = function(event) {
+        event.preventDefault()
+        
+        let target = event.target
+        
+        fetch("/buyflag/" + target.getAttribute("data-id"))
+            .then(function(data) {
+                return data.json()
+            })
+            .then(function(obj) {
+                if (obj.success) {
+                    alert(obj.flag)
+                } else {
+                    alert(obj.reason)
+                }
+            })
+            .catch(function(err) {
+                console.error(err)
+            })
+    }
+    
+    for (let link of document.getElementsByClassName("buy-link")) {
+        link.addEventListener("click", handler)
+    }
+}
+</script>
+{% endblock %}
