@@ -272,7 +272,7 @@ void viewShop(User *user) {
             case 7: {
                 // ToDo make a normal cast
                 if (user->money >= 1337) {
-                    printListUsers();
+                    getUserList();
                     std::cout << "Enter username: ";
                     std::string user;
                     std::getline(std::cin, user);
