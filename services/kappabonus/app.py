@@ -160,7 +160,7 @@ def sell():
                 team = "lcbc" if team == "2" else "kappa"
 
                 conn.cursor().execute(
-                    "update into user (balance, posted_flags) values (%s, %s) where username=%s",
+                    "update user (balance, posted_flags) values (%s, %s) where username=%s",
                     (balance + int(cost), posted_flags + 1, username)
                 )
                 conn.cursor().execute(
