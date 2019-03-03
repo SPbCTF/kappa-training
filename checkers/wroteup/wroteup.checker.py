@@ -174,7 +174,7 @@ def get(host, flag_id, flag, vuln):
 
         if resp.status_code != 200:
             log("[get] Can't log in with username: {} and password: {}".format(username, password))
-            quit(Status.MUMBLE, "Can't log in")
+            quit(Status.CORRUPT, "Can't log in")
 
         resp = sess.get("http://{}:50000/show".format(host), params={
             "ctf" : flag_id,
