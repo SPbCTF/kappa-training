@@ -90,7 +90,7 @@ def register():
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
-    if 'username' in sesson:
+    if 'username' in session:
         return redirect("/my/")
     
     error = None
@@ -174,7 +174,8 @@ def sell():
             
     return render_template(
         "sell.html",
-        error=error
+        error=error,
+        vip=vip
     )
 
 

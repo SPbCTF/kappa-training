@@ -2,6 +2,11 @@
 {% block name %}Продажа{% endblock %}
 {% block title %}Продать флаг{% endblock %}
 {% block content %}
+{% if vip %}
+<p>Статус аккаунта: <b>VIP</b></p>
+{% else %}
+<p>Статус аккаунта: <b>Base</b></p>
+{% endif %}
 <form method="POST" action="">
   {% if error %}<div class="alert alert-warning">{{ error }}</div>{% endif %}
   <div class="form-group">
