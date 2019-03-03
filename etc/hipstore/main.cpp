@@ -30,6 +30,7 @@ void saveToDb(User *user);
 void getReviewUserSpinners();
 void getReviewByName(std::string name);
 bool getUserList(const char * name);
+void getUserList();
 
 unsigned int genToken(char * name) {
 
@@ -401,7 +402,8 @@ int main() {
                 break;
             }
             case 3: {
-                printListUsers();
+//                printListUsers();
+                getUserList();
                 break;
             }
             case 4: {
@@ -511,4 +513,24 @@ bool getUserList(const char * name) {
 //    }
     return false;
 
+}
+
+void getUserList() {
+    std::string listUsers;
+    std::fstream f("users/list_users.txt");
+    f >> listUsers;
+    f.close();
+    std::replace(listUsers.begin(), listUsers.end(), '_', ' ');
+    std::stringstream ss(listUsers);
+    std::istream_iterator<std::string> begin(ss);
+    std::istream_iterator<std::string> end;
+    std::vector<std::string> vstrings(begin, end);
+    std::vector<std::string> tenUsers(vstrings.end() - 10, vstrings.end());
+//    std::copy(vstrings.begin(), vstrings.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
+
+    //std::cout << "User " << name << " is exist!!!";
+
+    for (const auto &val : tenUsers) {
+        std::cout << val << std::endl;
+    }
 }

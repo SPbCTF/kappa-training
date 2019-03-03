@@ -60,102 +60,105 @@ def quit(code, *args, **kwargs):
 
 def check(host):
     try:
-        username = fake.domain_word() + str(random.randint(1,31337))
-        password = id_generator()
-        token = ''
-        review = fake.sentence(10)
+        try
+            username = fake.domain_word() + str(random.randint(1,31337))
+            password = id_generator()
+            token = ''
+            review = fake.sentence(10)
 
-        sock = remote(host, PORT, level=60)
-        
-        # register
-        sock.recvuntil('\n\n')
-        sock.send('1\n')
-        
-        # send username
-        sock.recvuntil('\n')
-        sock.send(username+'\n')
+            sock = remote(host, PORT, level=60)
 
-        # send password
-        sock.recvuntil('\n')
-        sock.send(password+'\n')
+            # register
+            sock.recvuntil('\n\n')
+            sock.send('1\n')
 
-        # check money and send token
-        money, token, *trash = sock.recvuntil('\n\n').decode("utf-8").split('\n')
-        if 'money' not in money:
-            quit(Status.MUMBLE, 'No \'money\' in output')
-        token = token.split(' ')[3]
-        if not token:
-            quit(Status.MUMBLE, 'Token is empty')
-        
-        # check user list
-        sock.recvuntil('Quit\n\n')
-        sock.send('3\n')
-        userlist = sock.recvuntil('\n\n').decode("utf-8")
-        if not username in userlist:
-            quit(Status.MUMBLE, 'New user not found in the list')
-        
-        # buy random thing
-        sock.recvuntil('Quit\n\n')
-        sock.send('2\n')
+            # send username
+            sock.recvuntil('\n')
+            sock.send(username+'\n')
 
-        spinners = sock.recvuntil('\n\n').decode("utf-8")
-        if not 'Caviar Spinner Tricolor: 1000$' in spinners:
-            quit(Status.MUMBLE, 'Caviar spinner is not default')
-        if not 'iPhone Fidget Spinner: 500$' in spinners:
-            quit(Status.MUMBLE, 'iPhone spinner is not default')
-        if not 'Atesson Fidget Spinner: 20$' in spinners:
-            quit(Status.MUMBLE, 'Atesson spinner is not default')
+            # send password
+            sock.recvuntil('\n')
+            sock.send(password+'\n')
 
-        vapes = sock.recvuntil('\n\n').decode("utf-8")
-        if not 'Athea Mods Gimmick: 1000$' in vapes:
-            quit(Status.MUMBLE, 'Athea vape is not default')
-        if not 'Predator Cap S: 500$' in vapes:
-            quit(Status.MUMBLE, 'Predator vape is not default')
-        if not 'Monster Vapor Vapex: 100$' in vapes:
-            quit(Status.MUMBLE, 'Monster vape is not default')
+            # check money and send token
+            money, token, *trash = sock.recvuntil('\n\n').decode("utf-8").split('\n')
+            if 'money' not in money:
+                quit(Status.MUMBLE, 'No \'money\' in output')
+            token = token.split(' ')[3]
+            if not token:
+                quit(Status.MUMBLE, 'Token is empty')
 
-        # buy random item
-        choice = str(random.randint(1,6))
+            # check user list
+            sock.recvuntil('Quit\n\n')
+            sock.send('3\n')
+            userlist = sock.recvuntil('\n\n').decode("utf-8")
+            if not username in userlist:
+                quit(Status.MUMBLE, 'New user not found in the list')
 
-        sock.recvuntil(':')
-        sock.recvuntil(':')
-        sock.recvuntil('\n')
-        sock.send(choice + '\n')
+            # buy random thing
+            sock.recvuntil('Quit\n\n')
+            sock.send('2\n')
 
-        sock.recvuntil('\n')
-        succ = sock.recvuntil('\n').decode("utf-8")
-        if not 'Success' in succ:
-            quit(Status.MUMBLE, 'Can\'t buy item with number ', choice)
-        sock.recvuntil('\n')
-        sock.recvuntil('\n')
-        sock.recvuntil('\n')
-        sock.recvuntil('\n')
-        sock.recvuntil('\n')
+            spinners = sock.recvuntil('\n\n').decode("utf-8")
+            if not 'Caviar Spinner Tricolor: 1000$' in spinners:
+                quit(Status.MUMBLE, 'Caviar spinner is not default')
+            if not 'iPhone Fidget Spinner: 500$' in spinners:
+                quit(Status.MUMBLE, 'iPhone spinner is not default')
+            if not 'Atesson Fidget Spinner: 20$' in spinners:
+                quit(Status.MUMBLE, 'Atesson spinner is not default')
 
-        #send review
-        sock.send(review+'\n')
-        sock.recvuntil('\n\n')
-        sock.recvuntil('\n\n')
-        
-        # quit from shop
-        sock.send('8'+'\n')
+            vapes = sock.recvuntil('\n\n').decode("utf-8")
+            if not 'Athea Mods Gimmick: 1000$' in vapes:
+                quit(Status.MUMBLE, 'Athea vape is not default')
+            if not 'Predator Cap S: 500$' in vapes:
+                quit(Status.MUMBLE, 'Predator vape is not default')
+            if not 'Monster Vapor Vapex: 100$' in vapes:
+                quit(Status.MUMBLE, 'Monster vape is not default')
 
-        # check if item was really bought
-        sock.recvuntil('\n\n')
-        sock.send('5'+'\n')
-        my_items = sock.recvuntil('\n\n').decode("utf-8")
-        if not review.replace(' ', '_') in my_items:
-            quit(Status.MUMBLE, 'Bought item was not found ', choice)
+            # buy random item
+            choice = str(random.randint(1,6))
 
-        # check auth with generated token
-        sock.recvuntil('\n\n')
-        sock.send('4'+'\n')
-        sock.recvuntil('\n')
-        sock.send(token+'\n')
-        resp = sock.recvuntil('\n').decode("utf-8")
-        if 'token not found' in resp:
-            quit(Status.MUMBLE, 'Can\'t authorize with given token')
-        quit(Status.OK)
+            sock.recvuntil(':')
+            sock.recvuntil(':')
+            sock.recvuntil('\n')
+            sock.send(choice + '\n')
+
+            sock.recvuntil('\n')
+            succ = sock.recvuntil('\n').decode("utf-8")
+            if not 'Success' in succ:
+                quit(Status.MUMBLE, 'Can\'t buy item with number ', choice)
+            sock.recvuntil('\n')
+            sock.recvuntil('\n')
+            sock.recvuntil('\n')
+            sock.recvuntil('\n')
+            sock.recvuntil('\n')
+
+            #send review
+            sock.send(review+'\n')
+            sock.recvuntil('\n\n')
+            sock.recvuntil('\n\n')
+
+            # quit from shop
+            sock.send('8'+'\n')
+
+            # check if item was really bought
+            sock.recvuntil('\n\n')
+            sock.send('5'+'\n')
+            my_items = sock.recvuntil('\n\n').decode("utf-8")
+            if not review.replace(' ', '_') in my_items:
+                quit(Status.MUMBLE, 'Bought item was not found ', choice)
+
+            # check auth with generated token
+            sock.recvuntil('\n\n')
+            sock.send('4'+'\n')
+            sock.recvuntil('\n')
+            sock.send(token+'\n')
+            resp = sock.recvuntil('\n').decode("utf-8")
+            if 'token not found' in resp:
+                quit(Status.MUMBLE, 'Can\'t authorize with given token')
+            quit(Status.OK)
+        except EOFError:
+            quit(Status.DOWN, 'EOFError while recv smth')
     except PwnlibException as e:
         quit(Status.DOWN, 'Failed to connect')
 
