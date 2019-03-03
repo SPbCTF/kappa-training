@@ -1,4 +1,4 @@
-version: "3.6"
+version: "2.4"
 services:
     hipstore:
         image: hipstore
@@ -9,6 +9,7 @@ services:
             - "./hipstore/main:/root/main"
             - "./hipstore/users/:/root/users/"
         restart: always
+	mem_limit: 500m
     loli:
         image: loli
         build: loli
@@ -17,6 +18,7 @@ services:
         volumes:
             - "./loli/:/loli/"
         restart: always
+	mem_limit: 500m
     wroteup:
         image: wroteup
         build: wroteup
@@ -25,10 +27,13 @@ services:
         volumes:
             - "./wroteup/db.db:/go/src/github.com/kappactf/spbctf-20190303/services/wroteup/db.db"
         restart: always
+	mem_limit: 500m
     kappabonus:
         image: kappabonus
         build: kappabonus
         ports:
             - "3377:3377"
         restart: always
+	mem_limit: 500m
+
 
