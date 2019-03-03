@@ -203,7 +203,7 @@ def my():
     username = session["username"]
     
     cursor = conn.cursor()
-    cursor.execute('select id, "kappa" as team, cost, flag from kappa where username=%s union select id, "lcbc" as team, cost, flag from lcbc where username=%s', (username, username))
+    cursor.execute('select id, "Kappa" as team, cost, flag from kappa where username=%s union select id, "LC/BC" as team, cost, flag from lcbc where username=%s', (username, username))
     flags = cursor.fetchall()
     cursor.close()
     
@@ -217,7 +217,7 @@ def buy_flag(flag_id):
     username = session["username"]
 
     cursor = conn.cursor()
-    cursor.execute("select balance from users where username=%s", (username, ))
+    cursor.execute("select balance from user where username=%s", (username, ))
     row = cursor.fetchone()
     balance = row[0]
     cursor.close()
@@ -232,7 +232,7 @@ def buy_flag(flag_id):
     if price > balance:
         return jsonify({"success": False, "reason": "no money - no flags"})
 
-    conn.cursor().execute("update into users (balance) values (%s) where username=%s", (balance - price, username))
+    conn.cursor().execute("update user set balance=%s where username=%s", (balance - price, username))
 
     conn.commit()
 
