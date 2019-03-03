@@ -60,7 +60,7 @@ def quit(code, *args, **kwargs):
 
 def check(host):
     try:
-        try
+        try:
             username = fake.domain_word() + str(random.randint(1,31337))
             password = id_generator()
             token = ''
