@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+import traceback
 import sys
 import enum
 from base64 import b64decode
@@ -117,64 +117,81 @@ def check(host):
     except:
         quit(Status.DOWN)
     
-    s = requests.Session()
-    url = 'http://'+host+':'+PORT
-    login = id_generator(4) + '-' + id_generator(4) + '-' +id_generator(4)
-    password = id_generator(16)
-    isvip = False
-    
-    register(s, url, login, password, isvip)
-    auth(s, url, login, password)
+    try:
+        s = requests.Session()
+        url = 'http://'+host+':'+PORT
+        login = id_generator(4) + '-' + id_generator(4) + '-' +id_generator(4)
+        password = id_generator(16)
+        isvip = False
+        
+        register(s, url, login, password, isvip)
+        auth(s, url, login, password)
 
-    # check status
-    r = s.get(url+'/sell/')
-    regexx = r': <b>(.*?)<\/b><\/p>'
-    status = re.findall(regexx, r.text)[0]
-    if isvip and status != 'VIP':
-        quit(Status.MUMBLE, 'Checker can\'t get VIP')
-    
-    team = 1
-    cost = random.randint(1,999)
-    kappaflagid = put_flag(s, url, genflag(), team, cost, True)
+        # check status
+        r = s.get(url+'/sell/')
+        regexx = r': <b>(.*?)<\/b><\/p>'
+        status = re.findall(regexx, r.text)[0]
+        if isvip and status != 'VIP':
+            quit(Status.MUMBLE, 'Checker can\'t get VIP')
+        
+        team = 1
+        cost = random.randint(1,999)
+        kappaflagid = put_flag(s, url, id_generator(32), team, cost, True)
 
-    r = s.get(url+'/sell/')
-    regexx = r': <b>(.*?)<\/b><\/p>'
-    balance = re.findall(regexx, r.text)[1][1:]
-    if balance != str(cost):
-        quit(Status.CORRUPT, 'Bad balance after sell kappa')
+        r = s.get(url+'/sell/')
+        regexx = r': <b>(.*?)<\/b><\/p>'
+        balance = re.findall(regexx, r.text)[1][1:]
+        if balance != str(cost):
+            quit(Status.CORRUPT, 'Bad balance after sell kappa')
 
-    sl = requests.Session()
-    login = id_generator(4) + '-' + id_generator(4) + '-' +id_generator(4)
-    password = id_generator(16)
-    isvip = False
-    
-    register(sl, url, login, password, isvip)
-    auth(sl, url, login, password)
+        sl = requests.Session()
+        login = id_generator(4) + '-' + id_generator(4) + '-' +id_generator(4)
+        password = id_generator(16)
+        isvip = False
+        
+        register(sl, url, login, password, isvip)
+        auth(sl, url, login, password)
 
-    # check status
-    r = sl.get(url+'/sell/')
-    regexx = r': <b>(.*?)<\/b><\/p>'
-    status = re.findall(regexx, r.text)[0]
-    if isvip and status != 'VIP':
-        quit(Status.MUMBLE, 'Checker can\'t get VIP')
-    
-    team = 2
-    lcbcflagid = put_flag(sl, url, genflag(), team, cost, True)
+        # check status
+        r = sl.get(url+'/sell/')
+        regexx = r': <b>(.*?)<\/b><\/p>'
+        status = re.findall(regexx, r.text)[0]
+        if isvip and status != 'VIP':
+            quit(Status.MUMBLE, 'Checker can\'t get VIP')
+        
+        team = 2
+        lcbcflagid = put_flag(sl, url, id_generator(32), team, cost, True)
 
-    r = sl.get(url+'/sell/')
-    regexx = r': <b>(.*?)<\/b><\/p>'
-    balance = re.findall(regexx, r.text)[1][1:]
-    if balance != str(cost):
-        quit(Status.CORRUPT, 'Bad balance after sell lcbc')
+        r = sl.get(url+'/sell/')
+        regexx = r': <b>(.*?)<\/b><\/p>'
+        balance = re.findall(regexx, r.text)[1][1:]
+        if balance != str(cost):
+            quit(Status.CORRUPT, 'Bad balance after sell lcbc')
+        
+        
+        rbuy = s.get(url+'/buy/')
+        if rbuy.status_code != 200:
+            quit(Status.CORRUPT, "Can't list Kappa flags")
+        if ("<td>"+kappaflagid+"</td>") not in rbuy.text:
+            quit(Status.CORRUPT, "Kappa flag isn't available")
 
-    rkappa = s.get(url+'/buyflag/'+kappaflagid)
-    rlcbc = sl.get(url+'/buyflag/'+kappaflagid)
-    if rkappa.text != rlcbc.text:
-        log(rkappa.text, rlcbc.text)
-        quit(Status.CORRUPT, 'can\'t buy flag')
+        rbuy = sl.get(url+'/buy/')
+        if rbuy.status_code != 200:
+            quit(Status.CORRUPT, "Can't list Kappa flags")
+        if ("<td>"+kappaflagid+"</td>") not in rbuy.text:
+            quit(Status.CORRUPT, "Kappa flag isn't available")
+        
+        rkappa = s.get(url+'/buyflag/'+kappaflagid)
+        rlcbc = sl.get(url+'/buyflag/'+kappaflagid)
+        if rkappa.text != rlcbc.text:
+            log(rkappa.text, rlcbc.text)
+            quit(Status.CORRUPT, 'can\'t buy flag')
 
-    quit(Status.OK)
-
+        quit(Status.OK)
+    except SystemExit:
+        raise
+    except:
+        quit(Status.MUMBLE, "checker reshil shto ne sud'ba")
 
 def put(host, flag_id, flag, vuln):
     s = requests.Session()
@@ -207,7 +224,7 @@ def get(host, flag_id, flag, vuln):
     s = requests.Session()
     url = 'http://'+host+':'+PORT
     r = s.get(url)
-    share = 'X-Share-Flags' in r.headers
+    share = r.headers.get('X-Share-Flags', None) == 'true'
 
     auth(s, url, login, password, True)
 
@@ -217,23 +234,25 @@ def get(host, flag_id, flag, vuln):
         quit(Status.CORRUPT, 'Can\'t get flag')    
 
     if share:
-        quit(Status.OK, "Success: put flag", flag)
+        quit(Status.OK, "Sharing flags enabled in config.ini:", flag)
+#        quit(Status.OK)
     else:
         quit(Status.OK)
 
 
 def main():
-    script, action, host, *args = sys.argv
+    script, action, *args = sys.argv
     try:
         if action == "info":
             quit(Status.OK, "vulns:", VULNS)
         elif action == "check":
+            host, = args
             check(host)
         elif action == "put":
-            flag_id, flag, vuln = args
+            host, flag_id, flag, vuln = args
             put(host, flag_id, flag, vuln)
         elif action == "get":
-            flag_id, flag, vuln = args
+            host, flag_id, flag, vuln = args
             get(host, flag_id, flag, vuln)
         else:
             log("Unknown action:", action)
