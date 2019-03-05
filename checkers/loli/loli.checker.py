@@ -318,6 +318,8 @@ def get(host, flag_id, flag, vuln):
 
     except requests.ConnectionError:
         quit(Status.DOWN, "Can't connect to service")
+    except ValueError:
+        quit(Status.CORRUPT, "Can't get old flag")
 
 
 def main():
