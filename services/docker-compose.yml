@@ -9,6 +9,7 @@ services:
             - "./hipstore/users/:/root/users/"
         restart: always
         mem_limit: 500m
+        pids_limit: 50
     loli:
         image: loli
         build: loli
