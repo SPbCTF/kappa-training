@@ -121,6 +121,21 @@ def check(host):
             log("Can't read own writeup")
             quit(Status.MUMBLE, "Can't read own writeup")
 
+        username = random_username()
+        password = random_string()
+        resp = sess.post("http://{}:50000/register".format(host), data={
+            "login" : username,
+            "password" : password
+        })
+
+        resp = sess.get("http://{}:50000/show".format(host), params={
+            "ctf" : ctf,
+        }).text
+
+        if len(resp) + 40 < len(writeup):
+            log("Can't get encrypted writeup")
+            quit(Status.MUMBLE, "Can't get previous writeup")
+
         quit(Status.OK)
 
     except requests.ConnectionError:
