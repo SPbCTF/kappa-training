@@ -89,10 +89,10 @@ def check(host):
             quit(Status.MUMBLE, 'Token is empty')
 
         # check user list
-        sock.send('3\n')
-        userlist = sock.recvuntil('\n\n').decode("utf-8")
-        if not username in userlist:
-            quit(Status.MUMBLE, 'New user not found in the list')
+        #sock.send('3\n')
+        #userlist = sock.recvuntil('\n\n').decode("utf-8")
+        #if not username in userlist:
+        #    quit(Status.MUMBLE, 'New user not found in the list')
 
         # buy random thing
         sock.send('2\n')
@@ -154,8 +154,8 @@ def check(host):
         if 'token not found' in resp:
             quit(Status.MUMBLE, 'Can\'t authorize with given token')
         quit(Status.OK)
-    #except EOFError:
-    #    quit(Status.DOWN, 'EOFError while recv smth')
+    except EOFError:
+        quit(Status.DOWN, 'EOFError while recv smth')
     except PwnlibException as e:
         quit(Status.DOWN, 'Failed to connect')
 
