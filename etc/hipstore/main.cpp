@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cstring>
 #include <iterator>
+//#include <signal.h>
+#include <unistd.h>
 //#include "libgen.h"
 
 namespace fs = std::filesystem;
@@ -270,7 +272,7 @@ void viewShop(User *user) {
             case 7: {
                 // ToDo make a normal cast
                 if (user->money >= 1337) {
-                    printListUsers();
+                    getUserList();
                     std::cout << "Enter username: ";
                     std::string user;
                     std::getline(std::cin, user);
@@ -362,8 +364,13 @@ void printListUsers() {
 }
 
 
+
 int main() {
     // ToDo may be save data of users rigth away after registration?
+
+    alarm(10);
+
+
     fs::create_directory("users");
     std::cout << "Welcome to our hipstore service!\nHere you can purchase spinners and vapers!" << std::endl;
     bool isEnd = false;
@@ -385,7 +392,7 @@ int main() {
         try {
             cmd = std::stoi(s_cmd);
         } catch (...) {
-            cmd = 5;
+            cmd = 0;
         }
 
         switch (cmd) {

@@ -8,4 +8,4 @@ RUN apt-get -y install socat
 WORKDIR /root/
 COPY . .
 RUN chmod +x /root/main
-CMD ["socat", "-T", "60", "tcp-l:7878,fork,reuseaddr", "exec:/root/main"]
+CMD ["socat", "-T", "4", "tcp-l:7878,reuseaddr,fork", "exec:/root/main"]
