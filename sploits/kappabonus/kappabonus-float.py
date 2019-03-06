@@ -35,7 +35,7 @@ def buy(s, URL):
     for i in dictionary:
         if int(dictionary[i]) < 1000000:
             r = s.get(URL+"/buyflag/{}".format(i))
-            print(r.text)
+            print(r.text, flush=True)
 
 s = requests.Session()
 URL = "http://{ip}:{port}".format(ip=IP,port=PORT)
