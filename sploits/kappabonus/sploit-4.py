@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 # Есть конфиг с SHARE_FLAGS = True, приводящий к их выводу на борде (все флаги)
 import requests
 import re

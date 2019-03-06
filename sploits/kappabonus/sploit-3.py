@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 # Можно указать стоимость флага 1e9, продать свой флаг, а потом купить флаг Каппы 
 
 import sys
@@ -41,7 +44,6 @@ login = id_generator(4) + '-' + id_generator(4) + '-' +id_generator(4)
 password = id_generator(16)
 fake_flag = id_generator(31).upper()+"="
 
-#print(login+":"+password)
 register(s, URL, login, password)
 auth(s,URL,login,password)
 sell(s,URL,fake_flag)

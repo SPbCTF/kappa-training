@@ -1,3 +1,8 @@
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# Таблицы lcbc в БД каждой команды доступны на чтение всем
 import pymysql.cursors
 
 #DB = "mysql://anonymous:@cloud.spbctf.com:3306/test1"
