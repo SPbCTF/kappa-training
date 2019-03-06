@@ -16,7 +16,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		log.Println(tmpl.Execute(w, nil))
 	} else if r.Method == "POST" {
-		r.ParseForm()
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "Can't parse form", http.StatusInternalServerError)
+			return
+		}
 
 		login := r.Form.Get("login")
 		password := r.Form.Get("password")
@@ -25,7 +28,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 		stmt, err := db.Prepare("select login, password from users where login = ? and password = ?")
 		if err != nil {
-			log.Fatal(err)
+			http.Error(w, "Can't prepare SQL", http.StatusInternalServerError)
+			return
 		}
 
 		defer stmt.Close()
@@ -35,7 +39,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		err = stmt.QueryRow(login, password).Scan(&loginBuf, &passwordBuf)
 
 		if err != nil {
-			fmt.Println(err.Error())
 			http.Error(w, "Invalid login/password", http.StatusForbidden)
 			return
 		}
@@ -50,6 +53,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/main", http.StatusMovedPermanently)
 
 	} else {
-		fmt.Fprintln(w, "Unsupported method")
+		if _, err := fmt.Fprintln(w, "Unsupported method"); err != nil {
+			http.Error(w, "Can't send response", http.StatusInternalServerError)
+			return
+		}
 	}
 }

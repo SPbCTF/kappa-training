@@ -1,3 +1,4 @@
 requests
 faker
-crypto
+PyCrypto
+

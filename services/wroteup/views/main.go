@@ -5,7 +5,6 @@ import (
 	"github.com/kappactf/spbctf-20190303/services/wroteup/database"
 	"github.com/kappactf/spbctf-20190303/services/wroteup/structs"
 	"html/template"
-	"log"
 	"net/http"
 )
 
@@ -28,17 +27,22 @@ func Main(w http.ResponseWriter, r *http.Request) {
 		var author string
 		err = rows.Scan(&ctf, &author)
 		if err != nil {
-			log.Fatal(err)
+			http.Error(w, "Can't scan from database", http.StatusInternalServerError)
+			return
 		}
 		wr.Writeups = append(wr.Writeups, structs.Writeup{
 			Author: author,
-			Ctf:ctf,
+			Ctf:    ctf,
 		})
 	}
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, "Unknown error", http.StatusInternalServerError)
+		return
 	}
 
-	tmpl.Execute(w, wr)
+	if err := tmpl.Execute(w, wr); err != nil {
+		http.Error(w, "Can't produce template", http.StatusInternalServerError)
+		return
+	}
 }

@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cstring>
 #include <iterator>
+//#include <signal.h>
+#include <unistd.h>
 //#include "libgen.h"
 
 namespace fs = std::filesystem;
@@ -30,6 +32,7 @@ void saveToDb(User *user);
 void getReviewUserSpinners();
 void getReviewByName(std::string name);
 bool getUserList(const char * name);
+void getUserList();
 
 unsigned int genToken(char * name) {
 
@@ -269,7 +272,7 @@ void viewShop(User *user) {
             case 7: {
                 // ToDo make a normal cast
                 if (user->money >= 1337) {
-                    printListUsers();
+                    getUserList();
                     std::cout << "Enter username: ";
                     std::string user;
                     std::getline(std::cin, user);
@@ -361,8 +364,13 @@ void printListUsers() {
 }
 
 
+
 int main() {
     // ToDo may be save data of users rigth away after registration?
+
+    alarm(10);
+
+
     fs::create_directory("users");
     std::cout << "Welcome to our hipstore service!\nHere you can purchase spinners and vapers!" << std::endl;
     bool isEnd = false;
@@ -384,7 +392,7 @@ int main() {
         try {
             cmd = std::stoi(s_cmd);
         } catch (...) {
-            cmd = 5;
+            cmd = 0;
         }
 
         switch (cmd) {
@@ -401,7 +409,8 @@ int main() {
                 break;
             }
             case 3: {
-                printListUsers();
+//                printListUsers();
+                getUserList();
                 break;
             }
             case 4: {
@@ -511,4 +520,24 @@ bool getUserList(const char * name) {
 //    }
     return false;
 
+}
+
+void getUserList() {
+    std::string listUsers;
+    std::fstream f("users/list_users.txt");
+    f >> listUsers;
+    f.close();
+    std::replace(listUsers.begin(), listUsers.end(), '_', ' ');
+    std::stringstream ss(listUsers);
+    std::istream_iterator<std::string> begin(ss);
+    std::istream_iterator<std::string> end;
+    std::vector<std::string> vstrings(begin, end);
+    std::vector<std::string> tenUsers(vstrings.end() - 10, vstrings.end());
+//    std::copy(vstrings.begin(), vstrings.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
+
+    //std::cout << "User " << name << " is exist!!!";
+
+    for (const auto &val : tenUsers) {
+        std::cout << val << std::endl;
+    }
 }

@@ -6,17 +6,18 @@ services:
         ports:
             - "7878:7878"
         volumes:
-            - "./hipstore/main:/root/main"
             - "./hipstore/users/:/root/users/"
         restart: always
         mem_limit: 500m
+        pids_limit: 50
     loli:
         image: loli
         build: loli
         ports:
             - "4242:4242"
         volumes:
-            - "./loli/:/loli/"
+            - "./loli/data/:/loli/"
+            - "./loli/data/users:/loli/users"
         restart: always
         mem_limit: 500m
     wroteup:
@@ -31,6 +32,8 @@ services:
     kappabonus:
         image: kappabonus
         build: kappabonus
+        volumes:
+            - "./kappabonus/config.ini:/app/config.ini"
         ports:
             - "3377:3377"
         restart: always

@@ -5,7 +5,6 @@ import (
 	"github.com/kappactf/spbctf-20190303/services/wroteup/auth"
 	"github.com/kappactf/spbctf-20190303/services/wroteup/cipher"
 	"github.com/kappactf/spbctf-20190303/services/wroteup/database"
-	"log"
 	"net/http"
 )
 
@@ -18,7 +17,11 @@ func PostWriteup(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		r.ParseForm()
+		err = r.ParseForm()
+		if err != nil {
+			http.Error(w, "Can't parse form", http.StatusInternalServerError)
+			return
+		}
 
 		ctf := r.Form.Get("ctf")
 		writeup := r.Form.Get("writeup")
@@ -27,26 +30,39 @@ func PostWriteup(w http.ResponseWriter, r *http.Request) {
 
 		tx, err := db.Begin()
 		if err != nil {
-			log.Fatal(err)
+			http.Error(w, "Can't connect to database", http.StatusInternalServerError)
+			return
 		}
 
 		stmt, err := tx.Prepare("insert into writeups (author, ctf, writeup) values(?, ?, ?)")
 		if err != nil {
-			log.Fatal(err)
+			http.Error(w, "Can't prepare SQL", http.StatusInternalServerError)
+			return
 		}
 
 		c := cipher.SecureCipher{}
 
 		_, err = stmt.Exec(login, ctf, c.Encrypt([]byte(writeup)))
 		if err != nil {
-			log.Fatal(err)
+			http.Error(w, "Can't write to database", http.StatusInternalServerError)
+			return
 		}
 
-		tx.Commit()
+		err = tx.Commit()
+		if err != nil {
+			http.Error(w, "Can't commit to database", http.StatusInternalServerError)
+			return
+		}
 
-		fmt.Fprintln(w, "Success")
+		if _, err = fmt.Fprintln(w, "Success"); err != nil {
+			http.Error(w, "Can't send response", http.StatusInternalServerError)
+			return
+		}
 
 	} else {
-		fmt.Fprintln(w, "Unsupported method")
+		if _, err := fmt.Fprintln(w, "Unsupported method"); err != nil {
+			http.Error(w, "Can't send response", http.StatusInternalServerError)
+			return
+		}
 	}
 }
