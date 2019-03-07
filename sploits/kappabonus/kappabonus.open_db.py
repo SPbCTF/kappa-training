@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Таблицы lcbc в БД каждой команды доступны на чтение всем
+
 import pymysql.cursors
 import sys
 
