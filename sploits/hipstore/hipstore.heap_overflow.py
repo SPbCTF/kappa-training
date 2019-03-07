@@ -1,4 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+
+# Используем переполнение
 
 from pwn import *
 import sys

@@ -1,4 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+
+# Токены генерируются плохо, и мы можем по имени пользователя сгенерировать подходящий токен
 
 from pwn import *
 from binascii import crc32
