@@ -8,7 +8,7 @@ import sys
 DB = "kappabonus.spbctf.com"
 
 cnx = pymysql.connect(user='kappa', host=DB,
-                        database='test{i}'.format(i=sys.argv[1]))
+                        database='test{i}'.format(i=sys.argv[1][4]))
 cursor = cnx.cursor()
 query = "SELECT flag FROM lcbc"
 cursor.execute(query)
